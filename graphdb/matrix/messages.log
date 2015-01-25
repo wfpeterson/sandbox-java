@@ -1,0 +1,312 @@
+2012-10-17 19:01:22.425+0000: WARNING! Deprecated configuration options used. See manual for details
+2012-10-17 19:01:22.436+0000: cannot configure writers and searchers individually since they go together
+2012-10-17 19:01:22.488+0000: Creating new db @ /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore
+2012-10-17 19:01:22.521+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.nodestore.db] brickCount=0 brickSize=2443176b mappedMem=244318208b (storeSize=0b)
+2012-10-17 19:01:22.526+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.nodestore.db hit=1 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.541+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db.names] brickCount=0 brickSize=0b mappedMem=0b (storeSize=38b)
+2012-10-17 19:01:22.545+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db] brickCount=0 brickSize=0b mappedMem=0b (storeSize=0b)
+2012-10-17 19:01:22.545+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db.names hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.546+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.548+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db.names] brickCount=0 brickSize=0b mappedMem=0b (storeSize=38b)
+2012-10-17 19:01:22.549+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db] brickCount=0 brickSize=0b mappedMem=0b (storeSize=0b)
+2012-10-17 19:01:22.549+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.strings] brickCount=0 brickSize=747520b mappedMem=747634688b (storeSize=128b)
+2012-10-17 19:01:22.550+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.index.keys] brickCount=0 brickSize=1026b mappedMem=1048576b (storeSize=38b)
+2012-10-17 19:01:22.552+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.index] brickCount=0 brickSize=10485b mappedMem=1048576b (storeSize=0b)
+2012-10-17 19:01:22.554+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.arrays] brickCount=0 brickSize=848256b mappedMem=848297984b (storeSize=128b)
+2012-10-17 19:01:22.558+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db] brickCount=0 brickSize=8797534b mappedMem=879755264b (storeSize=0b)
+2012-10-17 19:01:22.560+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshipstore.db] brickCount=0 brickSize=10779351b mappedMem=1077936128b (storeSize=0b)
+2012-10-17 19:01:22.561+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.nodestore.db] brickCount=0 brickSize=244314b mappedMem=244318208b (storeSize=9b)
+2012-10-17 19:01:22.562+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore] brickCount=0 brickSize=0b mappedMem=0b (storeSize=0b)
+2012-10-17 19:01:22.568+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db.names hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.569+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.569+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.strings hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.570+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.index.keys hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.571+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.index hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.572+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.arrays hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.573+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.574+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshipstore.db hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.574+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.nodestore.db hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.575+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore hit=0 miss=8 switches=0 ooe=0
+2012-10-17 19:01:22.578+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db.names] brickCount=0 brickSize=0b mappedMem=0b (storeSize=38b)
+2012-10-17 19:01:22.578+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db] brickCount=0 brickSize=0b mappedMem=0b (storeSize=0b)
+2012-10-17 19:01:22.579+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.strings] brickCount=0 brickSize=747520b mappedMem=747634688b (storeSize=128b)
+2012-10-17 19:01:22.579+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.index.keys] brickCount=0 brickSize=1026b mappedMem=1048576b (storeSize=38b)
+2012-10-17 19:01:22.580+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.index] brickCount=0 brickSize=10485b mappedMem=1048576b (storeSize=0b)
+2012-10-17 19:01:22.580+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.arrays] brickCount=0 brickSize=848256b mappedMem=848297984b (storeSize=128b)
+2012-10-17 19:01:22.581+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db] brickCount=0 brickSize=8797534b mappedMem=879755264b (storeSize=0b)
+2012-10-17 19:01:22.581+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshipstore.db] brickCount=0 brickSize=10779351b mappedMem=1077936128b (storeSize=0b)
+2012-10-17 19:01:22.582+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.nodestore.db] brickCount=0 brickSize=244314b mappedMem=244318208b (storeSize=9b)
+2012-10-17 19:01:22.582+0000: [/Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore] brickCount=0 brickSize=0b mappedMem=0b (storeSize=54b)
+2012-10-17 19:01:22.594+0000: Opened logical log [/Users/wfpeterson/Documents/workspace/graphdb/matrix/nioneo_logical.log.1] version=0, lastTxId=1 (clean)
+2012-10-17 19:01:22.605+0000: TM new log: tm_tx_log.1
+2012-10-17 19:01:22.628+0000: Opened logical log [/Users/wfpeterson/Documents/workspace/graphdb/matrix/index/lucene.log.1] version=0, lastTxId=1 (clean)
+2012-10-17 19:01:22.632+0000: --- STARTUP diagnostics START ---
+2012-10-17 19:01:22.633+0000: Neo4j Kernel properties:
+    forced_kernel_id=
+    read_only=false
+    neo4j.ext.udc.host=udc.neo4j.org
+    logical_log=nioneo_logical.log
+    node_auto_indexing=false
+    intercept_committing_transactions=false
+    remote_shell_name=shell
+    cache_type=soft
+    intercept_deserialized_transactions=false
+    lucene_searcher_cache_size=2147483647
+    neo4j.ext.udc.interval=86400000
+    use_memory_mapped_buffers=true
+    rebuild_idgenerators_fast=true
+    neostore.propertystore.db.index.keys.mapped_memory=1M
+    neostore.propertystore.db.strings.mapped_memory=713M
+    neostore.propertystore.db.arrays.mapped_memory=809M
+    gcr_cache_min_log_interval=60s
+    relationship_grab_size=100
+    relationship_auto_indexing=false
+    remote_shell_read_only=false
+    node_cache_array_fraction=1.0
+    allow_store_upgrade=false
+    execution_guard_enabled=false
+    relationship_cache_array_fraction=1.0
+    remote_logging_host=127.0.0.1
+    store_dir=matrix
+    online_backup_enabled=false
+    remote_logging_port=4560
+    gc_monitor_threshold=200ms
+    array_block_size=120
+    load_kernel_extensions=true
+    neostore.relationshipstore.db.mapped_memory=1028M
+    keep_logical_logs=true
+    dump_configuration=false
+    gc_monitor_wait_time=100ms
+    neostore.nodestore.db.mapped_memory=233M
+    neo4j.ext.udc.first_delay=600000
+    remote_shell_enabled=false
+    neo4j.ext.udc.reg=unreg
+    remote_shell_port=1337
+    neo_store=neostore
+    logging.threshold_for_rotation=104857600
+    neostore.propertystore.db.index.mapped_memory=1M
+    backup_slave=false
+    neostore.propertystore.db.mapped_memory=839M
+    string_block_size=120
+    grab_file_lock=true
+    remote_logging_enabled=false
+    neo4j.ext.udc.enabled=true
+    online_backup_port=6362
+2012-10-17 19:01:22.639+0000: Diagnostics providers:
+    org.neo4j.kernel.configuration.Config
+    org.neo4j.kernel.info.DiagnosticsManager
+    SYSTEM_MEMORY
+    JAVA_MEMORY
+    OPERATING_SYSTEM
+    JAVA_VIRTUAL_MACHINE
+    CLASSPATH
+    LIBRARY_PATH
+    SYSTEM_PROPERTIES
+    NETWORK
+2012-10-17 19:01:22.641+0000: System memory information:
+    Total Physical memory: 8.00 GB
+    Free Physical memory: 4.26 GB
+    Committed virtual memory: 2.72 GB
+    Total swap space: 4.00 GB
+    Free swap space: 1009.57 MB
+2012-10-17 19:01:22.650+0000: JVM memory information:
+    Free  memory: 66.31 MB
+    Total memory: 81.06 MB
+    Max   memory: 123.94 MB
+    Garbage Collector: ParNew: [Par Eden Space, Par Survivor Space]
+    Garbage Collector: ConcurrentMarkSweep: [Par Eden Space, Par Survivor Space, CMS Old Gen, CMS Perm Gen]
+    Memory Pool: Code Cache (Non-heap memory): committed=2.44 MB, used=534.31 kB, max=48.00 MB, threshold=0.00 B
+    Memory Pool: Par Eden Space (Heap memory): committed=16.63 MB, used=15.09 MB, max=16.63 MB, threshold=?
+    Memory Pool: Par Survivor Space (Heap memory): committed=2.06 MB, used=0.00 B, max=2.06 MB, threshold=?
+    Memory Pool: CMS Old Gen (Heap memory): committed=62.38 MB, used=0.00 B, max=105.25 MB, threshold=0.00 B
+    Memory Pool: CMS Perm Gen (Non-heap memory): committed=20.75 MB, used=9.30 MB, max=82.00 MB, threshold=0.00 B
+2012-10-17 19:01:22.658+0000: Operating system information:
+    Operating System: Mac OS X; version: 10.8.2; arch: x86_64; cpus: 4
+    Max number of file descriptors: 10240
+    Number of open file descriptors: 67
+    Process id: 8553@Williams-MacBook-Air.local
+    Byte order: LITTLE_ENDIAN
+    Local timezone: America/New_York
+2012-10-17 19:01:22.667+0000: JVM information:
+    VM Name: Java HotSpot(TM) 64-Bit Server VM
+    VM Vendor: Apple Inc.
+    VM Version: 20.10-b01-428
+    JIT compiler: HotSpot 64-Bit Tiered Compilers
+    VM Arguments: [-Dfile.encoding=MacRoman]
+2012-10-17 19:01:22.668+0000: Java classpath:
+     [bootstrap] /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/charsets.jar
+     [bootstrap] /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/sunrsasign.jar
+     [bootstrap] /System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/JavaRuntimeSupport.framework/Versions/A/Resources/Java/JavaRuntimeSupport.jar
+     [loader.1] file:/System/Library/Java/Extensions/dns_sd.jar
+     [loader.1] file:/System/Library/Java/Extensions/j3dutils.jar
+     [loader.1] file:/System/Library/Java/Extensions/MRJToolkit.jar
+     [loader.1] file:/System/Library/Java/Extensions/jai_core.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/geronimo-jta_1.1_spec-1.1.1.jar
+     [loader.1] file:/System/Library/Java/Extensions/vecmath.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Documents/workspace/graphdb/bin/
+     [loader.1] file:/System/Library/Java/Extensions/libmlib_jai.jnilib
+     [loader.1] file:/System/Library/Java/Extensions/jai_codec.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/neo4j-graph-algo-1.8.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/neo4j-graph-matching-1.8.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/neo4j-kernel-1.8.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/neo4j-cypher-1.8.jar
+     [loader.1] file:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext/dnsns.jar
+     [loader.1] file:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext/sunjce_provider.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/scala-library-2.9.1-1.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/neo4j-lucene-index-1.8.jar
+     [bootstrap] /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/laf.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/server-api-1.8.jar
+     [loader.1] file:/System/Library/Java/Extensions/libJ3D.jnilib
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/neo4j-shell-1.8.jar
+     [loader.1] file:/System/Library/Java/Extensions/mlibwrapper_jai.jar
+     [bootstrap] /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar
+     [loader.1] file:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext/localedata.jar
+     [loader.1] file:/System/Library/Java/Extensions/QTJava.zip
+     [bootstrap] /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/jce.jar
+     [bootstrap] /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsse.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/neo4j-jmx-1.8.jar
+     [loader.1] file:/System/Library/Java/Extensions/libJ3DAudio.jnilib
+     [loader.1] file:/System/Library/Java/Extensions/libAppleScriptEngine.jnilib
+     [bootstrap] /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/ui.jar
+     [loader.1] file:/System/Library/Java/Extensions/j3daudio.jar
+     [loader.1] file:/System/Library/Java/Extensions/AppleScriptEngine.jar
+     [loader.1] file:/System/Library/Java/Extensions/libJ3DUtils.jnilib
+     [loader.1] file:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext/apple_provider.jar
+     [bootstrap] /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsfd.jar
+     [loader.1] file:/System/Library/Java/Extensions/libQTJNative.jnilib
+     [loader.1] file:/System/Library/Java/Extensions/j3dcore.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/neo4j-udc-1.8.jar
+     [loader.1] file:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext/sunpkcs11.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/org.apache.servicemix.bundles.jline-0.9.94_1.jar
+     [classpath + loader.0] file:/Users/wfpeterson/Downloads/neo4j-community-1.8/lib/lucene-core-3.5.0.jar
+2012-10-17 19:01:22.672+0000: Library path:
+    /Users/wfpeterson/Documents/workspace/graphdb
+    /Library/Java/Extensions
+    /System/Library/Java/Extensions
+    /usr/lib/java
+2012-10-17 19:01:22.673+0000: System.properties:
+    sun.boot.library.path = /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries
+    awt.nativeDoubleBuffering = true
+    gopherProxySet = false
+    mrj.build = 11M3811
+    path.separator = :
+    file.encoding.pkg = sun.io
+    sun.java.launcher = SUN_STANDARD
+    user.country = US
+    sun.os.patch.level = unknown
+    user.dir = /Users/wfpeterson/Documents/workspace/graphdb
+    sun.jnu.encoding = MacRoman
+    sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+    http.nonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    user.home = /Users/wfpeterson
+    user.timezone = America/New_York
+    file.encoding = MacRoman
+    user.name = wfpeterson
+    sun.java.command = matrix.EnterTheMatrix
+    sun.arch.data.model = 64
+    user.language = en
+    awt.toolkit = apple.awt.CToolkit
+    file.separator = /
+    sun.io.unicode.encoding = UnicodeLittle
+    sun.cpu.endian = little
+    mrj.version = 1070.1.6.0_35-428
+    socksNonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    ftp.nonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    sun.cpu.isalist = 
+2012-10-17 19:01:22.675+0000: Network information:
+    Interface en0:
+        address: fe80:0:0:0:7256:81ff:feb1:cad5%4
+        address: 172.31.85.88
+    Interface lo0:
+        address: 0:0:0:0:0:0:0:1
+        address: fe80:0:0:0:0:0:0:1%1
+        address: 127.0.0.1
+2012-10-17 19:01:22.678+0000: --- STARTUP diagnostics END ---
+2012-10-17 19:01:22.743+0000: Extension org.neo4j.kernel.KernelExtension[kernel jmx] loaded ok
+2012-10-17 19:01:22.746+0000: Extension org.neo4j.kernel.KernelExtension[kernel udc] loaded ok
+2012-10-17 19:01:22.749+0000: Extension org.neo4j.kernel.KernelExtension[shell] loaded ok
+2012-10-17 19:01:22.756+0000: --- STARTUP diagnostics for KernelDiagnostics:Versions START ---
+2012-10-17 19:01:22.756+0000: Graph Database: org.neo4j.kernel.EmbeddedGraphDatabase StoreId[time:1350500482488, id:2490230808633220524, store version: 13561656364791302]
+2012-10-17 19:01:22.757+0000: Kernel version: Neo4j - Graph Database Kernel 1.8
+2012-10-17 19:01:22.757+0000: Neo4j component versions:
+2012-10-17 19:01:22.757+0000:   Neo4j - Graph Database Kernel 1.8
+2012-10-17 19:01:22.758+0000: --- STARTUP diagnostics for KernelDiagnostics:Versions END ---
+2012-10-17 19:01:22.759+0000: --- STARTUP diagnostics for NEO_STORE_VERSIONS START ---
+2012-10-17 19:01:22.760+0000: Store versions:
+    Store versions:
+      NeoStore v0.A.0
+      NodeStore v0.A.0
+      RelationshipStore v0.A.0
+      RelationshipTypeStore v0.A.0
+      PropertyStore v0.A.0
+      PropertyIndexStore v0.A.0
+      StringPropertyStore v0.A.0
+      ArrayPropertyStore v0.A.0
+2012-10-17 19:01:22.760+0000: --- STARTUP diagnostics for NEO_STORE_VERSIONS END ---
+2012-10-17 19:01:22.760+0000: --- STARTUP diagnostics for NEO_STORE_ID_USAGE START ---
+2012-10-17 19:01:22.760+0000: Id usage:
+    Id usage:
+      NodeStore: used=1 high=0
+      RelationshipStore: used=0 high=-1
+      RelationshipTypeStore: used=0 high=-1
+      PropertyStore: used=0 high=-1
+      PropertyIndexStore: used=0 high=-1
+      StringPropertyStore: used=1 high=0
+      ArrayPropertyStore: used=1 high=0
+2012-10-17 19:01:22.761+0000: --- STARTUP diagnostics for NEO_STORE_ID_USAGE END ---
+2012-10-17 19:01:22.761+0000: --- STARTUP diagnostics for PERSISTENCE_WINDOW_POOL_STATS START ---
+2012-10-17 19:01:22.761+0000: --- STARTUP diagnostics for PERSISTENCE_WINDOW_POOL_STATS END ---
+2012-10-17 19:01:22.761+0000: --- STARTUP diagnostics for KernelDiagnostics:StoreFiles START ---
+2012-10-17 19:01:22.761+0000: Disk space on partition (Total / Free / Free %): 250140434432 / 211305041920 / 15
+Storage files: (filename : modification date - size)
+      active_tx_log: 2012-10-17T15:01:22-0400 - 11.00 B
+      index:
+        lucene-store.db: 2012-10-17T15:01:22-0400 - 40.00 B
+        lucene.log.1: 2012-10-17T15:01:22-0400 - 16.00 B
+        lucene.log.active: 2012-10-17T15:01:22-0400 - 4.00 B
+      - Total: 2012-10-17T15:01:22-0400 - 60.00 B
+      lock: 2012-10-17T15:01:22-0400 - 0.00 B
+      messages.log: 2012-10-17T15:01:22-0400 - 17.58 kB
+      neostore: 2012-10-17T15:01:22-0400 - 54.00 B
+      neostore.id: 2012-10-17T15:01:22-0400 - 9.00 B
+      neostore.nodestore.db: 2012-10-17T15:01:22-0400 - 9.00 B
+      neostore.nodestore.db.id: 2012-10-17T15:01:22-0400 - 9.00 B
+      neostore.propertystore.db: 2012-10-17T15:01:22-0400 - 0.00 B
+      neostore.propertystore.db.arrays: 2012-10-17T15:01:22-0400 - 128.00 B
+      neostore.propertystore.db.arrays.id: 2012-10-17T15:01:22-0400 - 9.00 B
+      neostore.propertystore.db.id: 2012-10-17T15:01:22-0400 - 9.00 B
+      neostore.propertystore.db.index: 2012-10-17T15:01:22-0400 - 0.00 B
+      neostore.propertystore.db.index.id: 2012-10-17T15:01:22-0400 - 9.00 B
+      neostore.propertystore.db.index.keys: 2012-10-17T15:01:22-0400 - 38.00 B
+      neostore.propertystore.db.index.keys.id: 2012-10-17T15:01:22-0400 - 9.00 B
+      neostore.propertystore.db.strings: 2012-10-17T15:01:22-0400 - 128.00 B
+      neostore.propertystore.db.strings.id: 2012-10-17T15:01:22-0400 - 9.00 B
+      neostore.relationshipstore.db: 2012-10-17T15:01:22-0400 - 0.00 B
+      neostore.relationshipstore.db.id: 2012-10-17T15:01:22-0400 - 9.00 B
+      neostore.relationshiptypestore.db: 2012-10-17T15:01:22-0400 - 0.00 B
+      neostore.relationshiptypestore.db.id: 2012-10-17T15:01:22-0400 - 9.00 B
+      neostore.relationshiptypestore.db.names: 2012-10-17T15:01:22-0400 - 38.00 B
+      neostore.relationshiptypestore.db.names.id: 2012-10-17T15:01:22-0400 - 9.00 B
+      nioneo_logical.log.1: 2012-10-17T15:01:22-0400 - 16.00 B
+      nioneo_logical.log.active: 2012-10-17T15:01:22-0400 - 4.00 B
+      tm_tx_log.1: 2012-10-17T15:01:22-0400 - 0.00 B
+2012-10-17 19:01:22.768+0000: --- STARTUP diagnostics for KernelDiagnostics:StoreFiles END ---
+2012-10-17 19:01:22.770+0000: Started - database is now available
+2012-10-17 19:01:22.770+0000: GC Monitor started. 
+2012-10-17 19:01:22.835+0000: Stopping - database is now unavailable
+2012-10-17 19:01:22.836+0000: TM shutting down
+2012-10-17 19:01:22.837+0000: Closed log /Users/wfpeterson/Documents/workspace/graphdb/matrix/index/lucene.log
+2012-10-17 19:01:22.839+0000: Closed log /Users/wfpeterson/Documents/workspace/graphdb/matrix/nioneo_logical.log
+2012-10-17 19:01:22.839+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db.names hit=0 miss=4 switches=0 ooe=0
+2012-10-17 19:01:22.840+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshiptypestore.db hit=0 miss=4 switches=0 ooe=0
+2012-10-17 19:01:22.841+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.strings hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.841+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.index.keys hit=2 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.842+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.index hit=2 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.843+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db.arrays hit=0 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.843+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.propertystore.db hit=5 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.844+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.relationshipstore.db hit=8 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.845+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore.nodestore.db hit=9 miss=0 switches=0 ooe=0
+2012-10-17 19:01:22.846+0000: /Users/wfpeterson/Documents/workspace/graphdb/matrix/neostore hit=0 miss=21 switches=0 ooe=0
+2012-10-17 19:01:22.846+0000: NeoStore closed
+2012-10-17 19:01:22.847+0000: --- SHUTDOWN diagnostics START ---
+2012-10-17 19:01:22.847+0000: --- SHUTDOWN diagnostics END ---
