@@ -109,7 +109,7 @@ public class Main{
 
     public static void main(String[] args)
     {
-        String text = "1.22.564456777888875.333333.98977888.1.5.4.7.9.2.2.33.54677.11";
+        String text = "CM|2|1.26.564456725807975.314859.98972835.1.5.4.7.9.2.2.33.54673.128";
 
         buildHuffmanTree(text);
     }
