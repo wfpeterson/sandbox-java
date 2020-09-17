@@ -203,8 +203,8 @@ public class SixBitEncoder {
         int length = txt.length();
         float tmpRet1=0,tmpRet2=0;
         if(bit==6){
-            tmpRet1=3.0f;
-            tmpRet2=4.0f;
+            tmpRet1=1.0f;
+            tmpRet2=1.0f;
         }else if(bit==5){
             tmpRet1=5.0f;
             tmpRet2=6.0f;
@@ -285,27 +285,28 @@ public class SixBitEncoder {
     }
 
     public static void main(String[] args){
-        //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
+        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         //String testStr = "XR-197198634";
         //String testStr = "CM|1|{34-2c-ca-7f-8e-99-aa-2a}";
         SixBitEncoder encoder = new SixBitEncoder();
-        //byte[] encodedResult = encoder.sixBitEncode(testStr, FOUR_BIT, "INSTANCEUID");
-        //String result = null;
-        //char[] charArray = new char[encodedResult.length];
-        //try {
-            //result = new String(encodedResult, 0, encodedResult.length, "UTF-8");
-        //    for (int i=0;i<encodedResult.length; i++){
-        //        charArray[i] = encoder.toBase64Char(encodedResult[i]);
-        //    }
-        //    result = new String(charArray);
-        //} catch (UnsupportedEncodingException e) {
-        //    e.printStackTrace();
+        byte[] encodedResult = encoder.sixBitEncode(testStr, FOUR_BIT, "INSTANCEUID");
+        String result = null;
+        char[] charArray = new char[encodedResult.length];
+        try {
+            result = new String(encodedResult, 0, encodedResult.length, "UTF-8");
+            for (int i=0;i<encodedResult.length; i++){
+                charArray[i] = encoder.toBase64Char(encodedResult[i]);
+            }
+            result = new String(charArray);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         //result = new String(encodedResult);
-        //System.out.println("Encoded result: "+ result);
-        //System.out.println("Encoded result string length: "+result.length());
+        System.out.println("Encoded result: "+ result);
+        System.out.println("Encoded result string length: "+result.length());
 
 
-        String result = new String("zfLx4uVG41J5EgNkOY5AWWgSNOU24uXk4eHiPjTpCHMhhG");
+        //String result = new String("zfLx4uVG41J5EgNkOY5AWWgSNOU24uXk4eHiPjTpCHMhhG");
         char[] decodeArray = result.toCharArray();
         byte[] decodeByteArray = new byte[result.length()];
         for(int j=0; j<decodeArray.length; j++){
