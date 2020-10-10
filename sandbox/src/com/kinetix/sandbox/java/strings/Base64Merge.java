@@ -6,20 +6,38 @@ import java.io.UnsupportedEncodingException;
 public class Base64Merge {
 
     final static public int FOUR_BIT = 4;
-    final static public int SIX_BIT = 6;
     final static public int FIVE_BIT = 5;
+    final static public int SIX_BIT = 6;
 
-    private static char[] base64Encodetbl = {
+    private static final char[] base64Encode = {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
         'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
         'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
         'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '~', '_'};
 
-    private static char[] toInstanceUIDTypeChartbl = {
+    private static final byte[] base64Decode = {
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
+        -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, 63,
+        -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+        41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, 62, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+
+    private static final char[] toInstanceUIDTypeChar = {
         '0', '1', '2', '3', '4', '5', '6', '7',
         '8', '9', 'V', 'A', 'C', 'M', '.', '|'};
 
-    private static byte[] toInstanceUIDTypeValuetbl = {
+    private static final byte[] toInstanceUIDTypeValue = {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, -1,
@@ -37,16 +55,19 @@ public class Base64Merge {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
+    private static final char[] toDocumentRefTypeChar = {
+        '0', '1', '2', '3', '4', '5', '6', '7',
+        '8', '9', 'X', 'R', '.', '|', '-', '_'};
 
-    private static byte[] base64Decodetbl = {
+    private static final byte[] toDocumentRefTypeValue = {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, 12, -1,
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
-        -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-        15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, 63,
-        -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-        41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, 62, -1,
+        -1, -1, 11, -1, -1, -1, -1, -1, 10, -1, -1, -1, -1, -1, -1, 15,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -55,6 +76,31 @@ public class Base64Merge {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+
+    private static final char[] toCAMMAndImageDiskTypeChar = {
+        '0', '1', '2', '3', '4', '5', '6', '7',
+        '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+        'a', 'b', 'c', 'd', 'e', 'f', 'M', 'V',
+        '-', '|', '{', '}'};
+
+    private static final byte[] toCAMMAndImageDiskTypeValue = {
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 24, 25, -1,
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, -1, -1, -1,
+        -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, 22, -1, -1,
+        -1, -1, -1, -1, -1, -1, 23, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, 16, 17, 18, 19, 20, 21, -1, -1, -1, -1, 26, -1, 27, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+
 
     public static String encode(String dataStr, int bit) {
         int length = dataStr.length();
@@ -81,8 +127,8 @@ public class Base64Merge {
             //convert char[] to byte[] using Base16 decoding
             for (int j = 0; j < str.length; j++) {
                 byte b = 0;
-                if (toInstanceUIDTypeValuetbl[str[j]] != -1) {
-                    b = (byte) (toInstanceUIDTypeValuetbl[str[j]] & 0x000F);
+                if (toInstanceUIDTypeValue[str[j]] != -1) {
+                    b = (byte) (toInstanceUIDTypeValue[str[j]] & 0x000F);
                     baseValues[j] = b;
                 }
             }
@@ -116,8 +162,53 @@ public class Base64Merge {
             //convert encoded byte[] to char[] using Base64 table
             char[] charArray = new char[encoded.length];
             for (int j = 0; j < encoded.length; j++) {
-                charArray[j] = base64Encodetbl[encoded[j]];
+                charArray[j] = base64Encode[encoded[j]];
             }
+            //convert char[] to string
+            result = new String(charArray);
+        }
+        else if (bit == 5) {
+            //convert char[] to byte[] using Base16 decoding
+            for (int j = 0; j < str.length; j++) {
+                byte b = 0;
+                if (toInstanceUIDTypeValue[str[j]] != -1) {
+                    b = (byte) (toInstanceUIDTypeValue[str[j]] & 0x000F);
+                    baseValues[j] = b;
+                }
+            }
+            byte encoded[] = new byte[(int) (tmpRet1 * Math.ceil(length / tmpRet2))];
+            int pad = 0;
+            int encodedCount = 0;
+            //pull 3 bytes to populate a single integer and convert to 2 chars for char[].  Use Base64 encoding.
+            for (int i = 0; i < baseValues.length; i += 3) {
+                int b = ((baseValues[i] & 0x0F) << 16) & 0xFFFFFF;
+                if (i + 1 < baseValues.length) {
+                    b |= (baseValues[i + 1] & 0x0F) << 8;
+                } else {
+                    pad++;
+                }
+                if (i + 2 < baseValues.length) {
+                    b |= (baseValues[i + 2] & 0x0F);
+                } else {
+                    pad++;
+                }
+                byte c = (byte) ((b & 0x0F0000) >> 14);
+                byte d = (byte) ((b & 0x000C00) >> 10);
+                c |= d;
+                encoded[encodedCount] = c;
+                encodedCount++;
+                byte e = (byte) ((b & 0x000300) >> 4);
+                byte f = (byte) (b & 0x00000F);
+                e |= f;
+                encoded[encodedCount] = e;
+                encodedCount++;
+            }
+            //convert encoded byte[] to char[] using Base64 table
+            char[] charArray = new char[encoded.length];
+            for (int j = 0; j < encoded.length; j++) {
+                charArray[j] = base64Encode[encoded[j]];
+            }
+
             //convert char[] to string
             result = new String(charArray);
         }
@@ -146,7 +237,7 @@ public class Base64Merge {
         byte[] decoded = new byte[charArray.length];
         int baseValuesLength = (int) (tmpRet2 * Math.ceil(charArray.length/ tmpRet1));
         for(int j=0; j<charArray.length; j++){
-            decoded[j] = base64Decodetbl[charArray[j]];
+            decoded[j] = base64Decode[charArray[j]];
         }
 
         //pull 2 bytes from encoded byte[] and merge them into a single integer.
@@ -163,9 +254,9 @@ public class Base64Merge {
             d |= f;
 
             //convert 3 bytes in single integer to 8bits and push each 8bit byte into byte[]
-            baseValues[decodedCount] = (byte) toInstanceUIDTypeChartbl[c];
-            baseValues[decodedCount + 1] = (byte) toInstanceUIDTypeChartbl[d];
-            baseValues[decodedCount + 2] = (byte) toInstanceUIDTypeChartbl[e];
+            baseValues[decodedCount] = (byte) toInstanceUIDTypeChar[c];
+            baseValues[decodedCount + 1] = (byte) toInstanceUIDTypeChar[d];
+            baseValues[decodedCount + 2] = (byte) toInstanceUIDTypeChar[e];
             decodedCount += 3;
         }
         String result = null;
