@@ -1,6 +1,5 @@
 package com.kinetix.sandbox.java.strings;
 
-import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
 public class Base64Merge {
@@ -124,7 +123,7 @@ public class Base64Merge {
         String result = null;
         //check bit depth
         if (bit == 4) {
-            //convert char[] to byte[] using Base16 decoding
+            //convert char[] to byte[] using Base8 decoding
             for (int j = 0; j < str.length; j++) {
                 byte b = 0;
                 if (toInstanceUIDTypeValue[str[j]] != -1) {
@@ -135,7 +134,7 @@ public class Base64Merge {
             byte encoded[] = new byte[(int) (tmpRet1 * Math.ceil(length / tmpRet2))];
             int pad = 0;
             int encodedCount = 0;
-            //pull 3 bytes to populate a single integer and convert to 2 chars for char[].  Use Base64 encoding.
+            //pull 3 bytes to populate a single integer and convert to 2 chars for char[].
             for (int i = 0; i < baseValues.length; i += 3) {
                 int b = ((baseValues[i] & 0x0F) << 16) & 0xFFFFFF;
                 if (i + 1 < baseValues.length) {
@@ -168,6 +167,73 @@ public class Base64Merge {
             result = new String(charArray);
         }
         else if (bit == 5) {
+            //convert char[] to byte[] using Base16 decoding
+            for (int j = 0; j < str.length; j++) {
+                byte b = 0;
+                if (toCAMMAndImageDiskTypeValue[str[j]] != -1) {
+                    b = (byte) (toCAMMAndImageDiskTypeValue[str[j]] & 0x001F);
+                    baseValues[j] = b;
+                }
+            }
+            byte encoded[] = new byte[(int) (tmpRet1 * Math.ceil(length / tmpRet2))];
+            int pad = 0;
+            int encodedCount = 0;
+            //pull 6 bytes to populate a single integer and convert to 5 chars for char[].  Use Base64 encoding.
+            for (int i = 0; i < baseValues.length; i += 6) {
+                int b = ((baseValues[i] & 0x1F) << 32) & 0xFFFFFFFF;
+                if (i + 1 < baseValues.length) {
+                    b |= (baseValues[i + 1] & 0x1F) << 16;
+                } else {
+                    pad++;
+                }
+                if (i + 2 < baseValues.length) {
+                    b |= (baseValues[i + 2] & 0x1F) << 8;
+                } else {
+                    pad++;
+                }
+                if (i + 3 < baseValues.length) {
+                    b |= (baseValues[i + 3] & 0x1F) << 8;
+                } else {
+                    pad++;
+                }
+                if (i + 4 < baseValues.length) {
+                    b |= (baseValues[i + 4] & 0x1F) << 8;
+                } else {
+                    pad++;
+                }
+                if (i + 5 < baseValues.length) {
+                    b |= (baseValues[i + 5] & 0x1F) << 8;
+                } else {
+                    pad++;
+                }
+                if (i + 6 < baseValues.length) {
+                    b |= (baseValues[i + 6] & 0x1F) << 8;
+                } else {
+                    pad++;
+                }
+
+
+                byte c = (byte) ((b & 0x0F0000) >> 14);
+                byte d = (byte) ((b & 0x000C00) >> 10);
+                c |= d;
+                encoded[encodedCount] = c;
+                encodedCount++;
+                byte e = (byte) ((b & 0x000300) >> 4);
+                byte f = (byte) (b & 0x00000F);
+                e |= f;
+                encoded[encodedCount] = e;
+                encodedCount++;
+            }
+            //convert encoded byte[] to char[] using Base64 table
+            char[] charArray = new char[encoded.length];
+            for (int j = 0; j < encoded.length; j++) {
+                charArray[j] = base64Encode[encoded[j]];
+            }
+
+            //convert char[] to string
+            result = new String(charArray);
+        }
+        else if (bit == 6) {
             //convert char[] to byte[] using Base16 decoding
             for (int j = 0; j < str.length; j++) {
                 byte b = 0;
@@ -270,19 +336,20 @@ public class Base64Merge {
 
 
     public static void main(String[] args){
-        /**
-        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
-        String encodedResult = Base64Merge.encode(testStr, FOUR_BIT);
+
+        //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
+        String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
+        String encodedResult = Base64Merge.encode(testStr, FIVE_BIT);
         System.out.println("Encoded result: "+ encodedResult);
         System.out.println("Encoded result string length: "+encodedResult.length());
-        **/
 
-        String testStr = "zfLx4uVG41J5EgNkOY5AWWgSNOU24uXk4eHiPjTpCHMhhG";
 
+        //String testStr = "zfLx4uVG41J5EgNkOY5AWWgSNOU24uXk4eHiPjTpCHMhhG";
+        /**
         String decodedStr = Base64Merge.decode(testStr, FOUR_BIT);
         System.out.println("Decoded result: " + decodedStr);
         System.out.println("Decoded result string length: " + decodedStr.length());
-
+        **/
     }
 
 }

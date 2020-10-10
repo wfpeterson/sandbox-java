@@ -7,7 +7,7 @@ import java.util.PriorityQueue;
 public class Main{
 
     // traverse the Huffman Tree and store Huffman Codes in a map.
-    public static void encode(Node root, String str, Map<Character, String> huffmanCode)
+    public static void encode(com.kinetix.sandbox.java.strings.Node root, String str, Map<Character, String> huffmanCode)
     {
         if (root == null)
             return;
@@ -22,7 +22,7 @@ public class Main{
     }
 
     // traverse the Huffman Tree and decode the encoded string
-    public static int decode(Node root, int index, StringBuilder sb)
+    public static int decode(com.kinetix.sandbox.java.strings.Node root, int index, StringBuilder sb)
     {
         if (root == null)
             return index;
@@ -56,13 +56,13 @@ public class Main{
 
         // Create a priority queue to store live nodes of Huffman tree
         // Notice that highest priority item has lowest frequency
-        PriorityQueue<Node> pq;
+        PriorityQueue<com.kinetix.sandbox.java.strings.Node> pq;
         pq = new PriorityQueue<>(Comparator.comparingInt(l -> l.freq));
 
         // Create a leaf node for each character and add it
         // to the priority queue.
         for (Map.Entry<Character, Integer> entry : freq.entrySet()) {
-            pq.add(new Node(entry.getKey(), entry.getValue()));
+            pq.add(new com.kinetix.sandbox.java.strings.Node(entry.getKey(), entry.getValue()));
         }
 
         // do till there is more than one node in the queue
@@ -70,18 +70,18 @@ public class Main{
         {
             // Remove the two nodes of highest priority
             // (lowest frequency) from the queue
-            Node left = pq.poll();
-            Node right = pq.poll();
+            com.kinetix.sandbox.java.strings.Node left = pq.poll();
+            com.kinetix.sandbox.java.strings.Node right = pq.poll();
 
             // Create a new internal node with these two nodes as children
             // and with frequency equal to the sum of the two nodes
             // frequencies. Add the new node to the priority queue.
             int sum = left.freq + right.freq;
-            pq.add(new Node('\0', sum, left, right));
+            pq.add(new com.kinetix.sandbox.java.strings.Node('\0', sum, left, right));
         }
 
         // root stores pointer to root of Huffman Tree
-        Node root = pq.peek();
+        com.kinetix.sandbox.java.strings.Node root = pq.peek();
 
         // traverse the Huffman tree and store the Huffman codes in a map
         Map<Character, String> huffmanCode = new HashMap<>();
