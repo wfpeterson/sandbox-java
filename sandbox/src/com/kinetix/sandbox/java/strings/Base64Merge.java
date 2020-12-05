@@ -108,8 +108,8 @@ public class Base64Merge {
             tmpRet1 = 2.0f;
             tmpRet2 = 3.0f;
         } else if (bit == 5) {
-            tmpRet1 = 5.0f;
-            tmpRet2 = 6.0f;
+            tmpRet1 = 8.0f;
+            tmpRet2 = 5.0f;
         } else if (bit == 6) {
             tmpRet1 = 1.0f;
             tmpRet2 = 1.0f;
@@ -178,51 +178,67 @@ public class Base64Merge {
             byte encoded[] = new byte[(int) (tmpRet1 * Math.ceil(length / tmpRet2))];
             int pad = 0;
             int encodedCount = 0;
-            //pull 6 bytes to populate a single integer and convert to 5 chars for char[].  Use Base64 encoding.
-            for (int i = 0; i < baseValues.length; i += 6) {
-                int b = ((baseValues[i] & 0x1F) << 32) & 0xFFFFFFFF;
+            //pull 5 bytes to populate a single long integer and convert to 5 chars for char[].  Use Base64 encoding.
+            for (int i = 0; i < baseValues.length; i += 5) {
+                long c = (long)((baseValues[i] & 0x1F) << 40);
                 if (i + 1 < baseValues.length) {
-                    b |= (baseValues[i + 1] & 0x1F) << 16;
+                    c |= (long)((baseValues[i + 1] & 0x1F) << 32);
                 } else {
                     pad++;
                 }
                 if (i + 2 < baseValues.length) {
-                    b |= (baseValues[i + 2] & 0x1F) << 8;
+                    c |= (long)((baseValues[i + 2] & 0x1F) << 24);
                 } else {
                     pad++;
                 }
                 if (i + 3 < baseValues.length) {
-                    b |= (baseValues[i + 3] & 0x1F) << 8;
+                    c |= (long)((baseValues[i + 3] & 0x1F) << 16);
                 } else {
                     pad++;
                 }
                 if (i + 4 < baseValues.length) {
-                    b |= (baseValues[i + 4] & 0x1F) << 8;
+                    c |= (long)((baseValues[i + 4] & 0x1F) << 8);
                 } else {
                     pad++;
                 }
                 if (i + 5 < baseValues.length) {
-                    b |= (baseValues[i + 5] & 0x1F) << 8;
+                    c |= (long)((baseValues[i + 5] & 0x1F));
                 } else {
                     pad++;
                 }
-                if (i + 6 < baseValues.length) {
-                    b |= (baseValues[i + 6] & 0x1F) << 8;
-                } else {
-                    pad++;
-                }
+                //if (i + 6 < baseValues.length) {
+                //    b |= ((baseValues[i + 6] & 0x1F));
+                //} else {
+                //    pad++;
+                //}
 
+                encoded[encodedCount] = (byte) (c);
+                //encodedCount++;
+                //encoded[encodedCount] = c;
+                //encodedCount++;
+                //encoded[encodedCount] = c;
+                //encodedCount++;
+                //encoded[encodedCount] = c;
+                //encodedCount++;
+                //encoded[encodedCount] = c;
+                //encodedCount++;
+                //encoded[encodedCount] = c;
+                //encodedCount++;
+                //encoded[encodedCount] = c;
+                //encodedCount++;
+                //encoded[encodedCount] = c;
+                //encodedCount++;
 
-                byte c = (byte) ((b & 0x0F0000) >> 14);
-                byte d = (byte) ((b & 0x000C00) >> 10);
-                c |= d;
-                encoded[encodedCount] = c;
-                encodedCount++;
-                byte e = (byte) ((b & 0x000300) >> 4);
-                byte f = (byte) (b & 0x00000F);
-                e |= f;
-                encoded[encodedCount] = e;
-                encodedCount++;
+                //byte c = (byte) ((b & 0x0F0000) >> 14);
+                //byte d = (byte) ((b & 0x000C00) >> 10);
+                //c |= d;
+                //encoded[encodedCount] = c;
+                //encodedCount++;
+                //byte e = (byte) ((b & 0x000300) >> 4);
+                //byte f = (byte) (b & 0x00000F);
+                //e |= f;
+                //encoded[encodedCount] = e;
+                //encodedCount++;
             }
             //convert encoded byte[] to char[] using Base64 table
             char[] charArray = new char[encoded.length];
