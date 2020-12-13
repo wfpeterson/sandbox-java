@@ -4,12 +4,18 @@ import java.util.Base64;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-public class Main2{
+public class DeflaterCompressor{
+
+    public DeflaterCompressor(){
+
+    }
+
     public static void main(String[] args)throws Exception { // main method
         // Encode a String into bytes
         String inputString = "CM|2|1.26.564456725807975.314859.98972835.1.5.4.7.9.2.2.33.54673.128";
         byte[] input = inputString.getBytes("UTF-8");
 
+        DeflaterCompressor deflaterCompressor = new DeflaterCompressor();
         // Compress the bytes
         byte[] output1 = new byte[input.length];
         Deflater compresser = new Deflater();

@@ -4,7 +4,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
-public class Main{
+public class HuffmanTree{
+
+    public HuffmanTree(){
+
+    }
 
     // traverse the Huffman Tree and store Huffman Codes in a map.
     public static void encode(com.kinetix.sandbox.java.strings.Node root, String str, Map<Character, String> huffmanCode)
@@ -111,6 +115,7 @@ public class Main{
     {
         String text = "CM|2|1.26.564456725807975.314859.98972835.1.5.4.7.9.2.2.33.54673.128";
 
+        HuffmanTree huffman = new HuffmanTree();
         buildHuffmanTree(text);
     }
 }

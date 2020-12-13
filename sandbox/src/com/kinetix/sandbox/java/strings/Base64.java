@@ -14,7 +14,6 @@ public class Base64 {
         StringBuilder buffer = new StringBuilder();
         int pad = 0;
         for (int i = 0; i < data.length; i += 3) {
-
             int b = ((data[i] & 0xFF) << 16) & 0xFFFFFF;
             if (i + 1 < data.length) {
                 b |= (data[i + 1] & 0xFF) << 8;
@@ -102,7 +101,8 @@ public class Base64 {
         //String testStr = "XR-197198634";
         //String testStr = "CM|1|{34-2c-ca-7f-8e-99-aa-2a}";
 
-        String encodedStr = Base64.encode(testStr.getBytes());
+        byte[] byteStr = testStr.getBytes();
+        String encodedStr = Base64.encode(byteStr);
         System.out.println("Encoded String: "+ encodedStr);
         System.out.println("Encoded String length: "+encodedStr.length());
 

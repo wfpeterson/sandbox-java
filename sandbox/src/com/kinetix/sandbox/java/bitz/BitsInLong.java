@@ -7,7 +7,6 @@ public class BitsInLong {
         long a = (long) 0x00;
         long b = (long) 0xFF;
 
-
         long c = 0L;
         System.out.println(Long.toBinaryString(c));
         c |= (b & 0xFF) << 56;
