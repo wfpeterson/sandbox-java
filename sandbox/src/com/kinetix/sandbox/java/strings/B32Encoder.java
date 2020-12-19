@@ -56,38 +56,41 @@ public class B32Encoder{
 
         //in
         int inLength = dataStr.length();
+        byte[] dataBytes = dataStr.getBytes();
         char[] charArray = new char[inLength];
         dataStr.getChars(0, inLength, charArray, 0);
-        byte bBinary = 0;
-        long cBinary = 0L, dBinary = 0L;
+        byte cBinary = 0;
+        long dBinary = 0L, eBinary = 0L;
 
         //out
         float tmpRet1 = 5.0F, tmpRet2 = 8.0F;
-        //byte encoded[]=new byte[(int)(tmpRet1*Math.ceil(inLength/tmpRet2))];
+        int outlength = (int) (tmpRet1 * Math.ceil((inLength / tmpRet2)));
+        byte encoded[]=new byte[outlength];
+        StringBuilder encodedResult = new StringBuilder(outlength);
         int pad = 0;
-        StringBuilder encodedResult = new StringBuilder((int)(tmpRet1*Math.ceil(inLength/tmpRet2)));
-        //String result = null;
-        byte convertedData[] = new byte[inLength];
+        String result = null;
+        //byte convertedData[] = new byte[inLength];
 
 
         //convert char[] to byte[] using Base16 decoding
-        for (int j = 0; j < charArray.length; j++) {
-            bBinary = 0;
+        for (int j = 0; j < inLength; j++) {
+            cBinary = 0;
             if (toCAMMAndImageDiskTypeDecode[charArray[j]] != -1) {
-                bBinary = (byte) (toCAMMAndImageDiskTypeDecode[charArray[j]] & 0x001F);
-                convertedData[j] = bBinary;
+                cBinary = (byte) (toCAMMAndImageDiskTypeDecode[charArray[j]] & 0x001F);
+                dataBytes[j] = cBinary;
             }
         }
 
-        //pull 5 (8-bit) bytes to populate a single long integer and convert to 5 chars for char[].  Use Base64 encoding.
-        for(int i=0; i<convertedData.length ; i += 8){
+        //pull 6 bytes to populate a single long integer and convert to 5 chars for char[] using Base64 encoding.
+        for(int i=0; i<dataBytes.length ; i+=6){
             pad = 0;
-            cBinary = 0L;
-            for(int j=0; j<8; j++){
-                if(i + j < convertedData.length){
-                    cBinary |= (convertedData[i + j] & 0xFF);
+            dBinary = 0L;
+            /**
+            for(int j=0; j<5; j++){
+                if(i + j < dataBytes.length){
+                    dBinary |= (dataBytes[i + j] & 0xFF);
                     if(j < 4){
-                        cBinary = cBinary << 8;
+                        dBinary = dBinary << 8;
                     }
                 }
                 else{
@@ -95,14 +98,32 @@ public class B32Encoder{
                 }
             }
             for(int k=0; k<5-pad; k++){
-                dBinary = 0L;
-                dBinary = (cBinary & 0x00F800000000L);
-                dBinary >>= 35;
+                eBinary = 0L;
+                eBinary = (dBinary & 0x00F800000000L);
+                eBinary >>= 35;
                 //convertedData[k] = (byte) d;
-                encodedResult.append(base64Encode[(byte) dBinary]);
-                cBinary = cBinary << 5;
+                encodedResult.append(base64Encode[(byte) eBinary]);
+                dBinary = dBinary << 5;
+            }**/
+            dBinary = 0;
+            dBinary = (((dataBytes[i + 0] & 0x3F) << 18) & 0xFFFFFF);
+            if (i + 1 < dataBytes.length) {
+                dBinary |= ((dataBytes[i + 1] & 0x3F) << 14);
+            } else {
+                pad++;
             }
+            if (i + 2 < dataBytes.length){
+                dBinary |= ((dataBytes[i + 2] & 0x3F) << 10);
+            } else {
+                pad++;
+            }
+            for(int j=0; j<2-pad; j+=2) {
+                byte eBinary = (byte) ((dBinary & 0xFF0000) >> 16);
+                buffer.append(base64Encode[eBinary]);
 
+                byte fBinary = (byte) ((dBinary & 0xFF00) >> 10);
+                buffer.append(base64Encode[fBinary]);
+            }
         }
         //byte d = (byte) ((c & 0x0F0000) >> 14);
         //byte e = (byte) ((c & 0x000C00) >> 10);
@@ -116,10 +137,12 @@ public class B32Encoder{
         //encodedCount++;
         //convert encoded byte[] to char[] using Base64 table
         //char[] charArray = new char[encoded.length];
-        for(int m = 0; m < pad; m++){
-            encodedResult.append(PADDING);
+        for(int k=0; k<pad; k++){
+            buffer.append(PADDING);
         }
-        return encodedResult.toString();
+        //convert char[] to string
+        result = buffer.toString();
+        return result;
     }
 
 

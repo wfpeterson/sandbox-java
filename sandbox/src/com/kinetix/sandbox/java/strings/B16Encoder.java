@@ -77,6 +77,8 @@ public class B16Encoder{
 
         //in
         int inLength = dataStr.length();
+        char[] charArray = new char[inLength];
+        dataStr.getChars(0, inLength, charArray, 0);
         byte[] dataBytes = dataStr.getBytes();
         byte cBinary = 0;
         int dBinary = 0;
@@ -96,8 +98,8 @@ public class B16Encoder{
         //convert char[] to byte[] using Base8 decoding
         for (int j = 0; j < inLength; j++) {
             cBinary = 0;
-            if (toInstanceUIDTypeDecode[dataBytes[j]] != -1) {
-                cBinary = (byte) (toInstanceUIDTypeDecode[dataBytes[j]] & 0x00FF);
+            if (toInstanceUIDTypeDecode[charArray[j]] != -1) {
+                cBinary = (byte) (toInstanceUIDTypeDecode[charArray[j]] & 0x000F);
                 dataBytes[j] = cBinary;
             }
         }
