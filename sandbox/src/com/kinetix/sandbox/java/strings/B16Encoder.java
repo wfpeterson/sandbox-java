@@ -73,75 +73,125 @@ public class B16Encoder{
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
     public static String encode(String dataStr) {
-        //int length = dataStr.length();
-        //dataStr.getChars(0, length, str, 0);
-        byte[] baseValues = dataStr.getBytes();
-        int length = baseValues.length;
-        float tmpRet1 = 2.0F, tmpRet2 = 1.0F;
-        StringBuilder buffer = new StringBuilder();
 
-        //convert String to char[]
-        //char str[] = new char[length];
 
-        String result = null;
-        //convert char[] to byte[] using Base8 decoding
-        for (int j = 0; j < dataStr.length(); j++) {
-            byte b = 0;
-            if (toInstanceUIDTypeDecode[baseValues[j]] != -1) {
-                b = (byte) (toInstanceUIDTypeDecode[baseValues[j]] & 0x000F);
-                baseValues[j] = b;
-            }
-        }
-        byte encoded[] = new byte[(int) (tmpRet1 * Math.ceil(length / tmpRet2))];
+        //in
+        int inLength = dataStr.length();
+        byte[] dataBytes = dataStr.getBytes();
+        byte cBinary = 0;
+        int dBinary = 0;
+
+        //out
+        float tmpRet1 = 1.0F, tmpRet2 = 2.0F;
+        int outLength = (int) (tmpRet1 * Math.ceil(inLength / tmpRet2));
+        byte encoded[] = new byte[outLength];
+        //char[] charArray = new char[outLength];
+        //dataStr.getChars(0, inLength, charArray, 0);
+
+        StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
-        int encodedCount = 0;
-        //pull 3 bytes to populate a single integer and convert to 2 chars for char[].
-        for (int i = 0; i < baseValues.length; i += 3) {
-            int b = ((baseValues[i] & 0x0F) << 16) & 0xFFFFFF;
-            if (i + 1 < baseValues.length) {
-                b |= (baseValues[i + 1] & 0x0F) << 8;
-            } else {
-                pad++;
+        String result = null;
+
+
+        //convert char[] to byte[] using Base8 decoding
+        for (int j = 0; j < inLength; j++) {
+            cBinary = 0;
+            if (toInstanceUIDTypeDecode[dataBytes[j]] != -1) {
+                cBinary = (byte) (toInstanceUIDTypeDecode[dataBytes[j]] & 0x00FF);
+                dataBytes[j] = cBinary;
             }
-            if (i + 2 < baseValues.length) {
-                b |= (baseValues[i + 2] & 0x0F);
-            } else {
-                pad++;
-            }
-            byte c = (byte) ((b & 0x0F0000) >> 14);
-            byte d = (byte) ((b & 0x000C00) >> 10);
-            c |= d;
-            encoded[encodedCount] = c;
-            encodedCount++;
-            byte e = (byte) ((b & 0x000300) >> 4);
-            byte f = (byte) (b & 0x00000F);
-            e |= f;
-            encoded[encodedCount] = e;
-            encodedCount++;
         }
-        //convert encoded byte[] to char[] using Base64 table
-        char[] charArray = new char[encoded.length];
-        for (int j = 0; j < encoded.length; j++){
-            charArray[j] = base64Encode[encoded[j]];
+        //byte encoded[] = new byte[(int) (tmpRet1 * Math.ceil(inLength / tmpRet2))];
+        pad = 0;
+        //int encodedCount = 0;
+        //pull 3 bytes to populate a single integer and convert to 2 chars for char[].
+        for (int i = 0; i < dataBytes.length; i += 3) {
+            dBinary = 0;
+            dBinary = (((dataBytes[i + 0] & 0x3F) << 18) & 0xFFFFFF);
+            if (i + 1 < dataBytes.length) {
+                dBinary |= ((dataBytes[i + 1] & 0x3F) << 14);
+            } else {
+                pad++;
+            }
+            if (i + 2 < dataBytes.length){
+                dBinary |= ((dataBytes[i + 2] & 0x3F) << 10);
+            } else {
+                pad++;
+            }
+            for(int j=0; j<2-pad; j+=2) {
+                byte eBinary = (byte) ((dBinary & 0xFF0000) >> 16);
+                buffer.append(base64Encode[eBinary]);
+
+                byte fBinary = (byte) ((dBinary & 0xFF00) >> 10);
+                buffer.append(base64Encode[fBinary]);
+
+            }
+        }
+        for(int k=0; k<pad; k++){
+            buffer.append(PADDING);
         }
         //convert char[] to string
-        result = new String(charArray);
-
-        return buffer.toString();
-
+        result = buffer.toString();
+        return result;
     }
 
 
-    public static String decode(String data) {
-        float tmpRet1 = 2.0F, tmpRet2 = 3.0F;
+    public static String decode(String dataStr) {
+        //in
+        int inLength = dataStr.length();
+        byte[] encoded = dataStr.getBytes();
+        int cBinary = 0;
+        int dBinary = 0;
 
-        //convert string to char[]
-        char[] charArray = new char[data.length()];
-        data.getChars(0, data.length(), charArray, 0);
+        //out
+        float tmpRet1 = 4.0F, tmpRet2 = 3.0F;
+        int outLength = (int) (tmpRet2*Math.ceil(inLength/tmpRet1));
+        java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
 
+        for (int i = 0; i < encoded.length; i += 2) {
+            dBinary = 0;
+            int num = 0;
+            if (base64Decode[encoded[i + 0]] != -1) {
+                dBinary = ((base64Decode[encoded[i + 0]] & 0x3F) << 8);
+                //num++;
+            }
+            //skip unknown characters
+            //else {
+            //    i++;
+            //    continue;
+            //}
+            if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
+                dBinary |=  ((base64Decode[encoded[i + 1]] & 0x3F));
+                //num++;
+            }
+
+            cBinary = ((dBinary & 0x3C00) >> 10);
+            buffer.write((char) cBinary);
+            cBinary = ((dBinary & 0x0300) >> 6);
+            cBinary |= ((dBinary & 0x30) >> 4);
+            buffer.write((char) cBinary);
+            cBinary = ((dBinary & 0x0F));
+            buffer.write((char)cBinary);
+
+
+
+            //while (num > 0) {
+            //    int c = (dBinary & 0xFF0000) >> 16;
+            //    buffer.write((char) cBinary);
+            //    dBinary <<= 8;
+            //    num--;
+            //}
+        }
+
+        byte[] decodedBytes = buffer.toByteArray();
+        char[] outputChars = new char[decodedBytes.length];
+        for(int j=0; j<decodedBytes.length; j++){
+            outputChars[j] = toInstanceUIDTypeEncode[decodedBytes[j]];
+        }
+        decodedStr = new String(outputChars);
+
         return decodedStr;
-        //return buffer.toByteArray();
     }
 
 

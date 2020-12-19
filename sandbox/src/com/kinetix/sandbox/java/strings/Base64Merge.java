@@ -103,10 +103,11 @@ public class Base64Merge {
 
 
     public static String encode(String dataStr, int bit) {
-        //int length = dataStr.length();
-        //dataStr.getChars(0, length, str, 0);
+        int length = dataStr.length();
+        char[] charValues = new char[length];
+        dataStr.getChars(0, length, charValues, 0);
         byte[] baseValues = dataStr.getBytes();
-        int length = baseValues.length;
+        //int length = baseValues.length;
         float tmpRet1 = 0, tmpRet2 = 0;
         StringBuilder buffer = new StringBuilder();
 
@@ -129,13 +130,13 @@ public class Base64Merge {
         //check bit depth
         if (bit == 4) {
             //convert char[] to byte[] using Base8 decoding
-            //for (int j = 0; j < str.length; j++) {
-            //    byte b = 0;
-            //    if (toInstanceUIDTypeValue[str[j]] != -1) {
-            //        b = (byte) (toInstanceUIDTypeValue[str[j]] & 0x000F);
-            //        baseValues[j] = b;
-            //    }
-            //}
+            for (int j = 0; j < length; j++) {
+                byte b = 0;
+                if (toInstanceUIDTypeValue[charValues[j]] != -1) {
+                    b = (byte) (toInstanceUIDTypeValue[charValues[j]] & 0x000F);
+                    baseValues[j] = b;
+                }
+            }
             byte encoded[] = new byte[(int) (tmpRet1 * Math.ceil(length / tmpRet2))];
             int pad = 0;
             int encodedCount = 0;
@@ -466,14 +467,14 @@ public class Base64Merge {
 
     public static void main(String[] args){
 
-        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
-        //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
-        String encodedResult = Base64Merge.encode(testStr, SIX_BIT);
+        //String testStr = "This is a test of Base64 encoding/decoding";
+        String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
+        String encodedResult = Base64Merge.encode(testStr, FOUR_BIT);
         System.out.println("Encoded result: "+ encodedResult);
         System.out.println("Encoded result string length: "+encodedResult.length());
 
 
-        String decodedStr = Base64Merge.decode(encodedResult, SIX_BIT);
+        String decodedStr = Base64Merge.decode(encodedResult, FOUR_BIT);
         System.out.println("Decoded result: " + decodedStr);
         System.out.println("Decoded result string length: " + decodedStr.length());
 

@@ -97,7 +97,7 @@ public class Base64 {
     }
 
     public static void main(String[] args) {
-        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
+        String testStr = "This is a test of Base64 encoding/decoding";
         //String testStr = "XR-197198634";
         //String testStr = "CM|1|{34-2c-ca-7f-8e-99-aa-2a}";
 

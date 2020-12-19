@@ -38,35 +38,35 @@ public class B64Encoder{
         int cBinary = 0, dBinary = 0;
 
         //out
-        float tmpRet1 = 3.0F, tmpRet2 = 4.0F;
-        //byte encoded[]=new byte[(int)(tmpRet1*Math.ceil(inLength/tmpRet2))];
+        float tmpRet1 = 4.0F, tmpRet2 = 3.0F;
+        ////byte encoded[]=new byte[(int)(tmpRet1*Math.ceil(inLength/tmpRet2))];
         int outLength = (int) (tmpRet1*Math.ceil(inLength/tmpRet2));
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
 
-        for(int i = 0; i < outLength; i += 3){
+        for(int i = 0; i < inLength; i += 3){
             cBinary = 0;
 
-            if(i + 0 < ){
+            if(i + 0 < charArray.length){
                 cBinary = ((charArray[i + 0] & 0xFF) << 16) & 0xFFFFFF;
             }
             else{
                 pad++;
             }
-            if(i + 1 < buffer.length()){
+            if(i + 1 < charArray.length){
                 cBinary|= ((charArray[i + 1] & 0xFF) << 8);
             }
             else{
                 pad++;
             }
-            if(i + 2 < buffer.length()){
+            if(i + 2 < charArray.length){
                 cBinary |= ((charArray[i + 2] & 0xFF));
             }
             else{
                 pad++;
             }
             //if(i + 3 < charArray.length){
-            //    cBinary |= (charArray[i + 3] & 0xFF);
+            //    cBinary |= ((charArray[i + 3] & 0xFF));
             //}
             //else{
             //    pad++;
@@ -94,20 +94,24 @@ public class B64Encoder{
         int cBinary = 0, dBinary = 0;
         
         //out
-        float tmpRet1 = 3.0F, tmpRet2 = 4.0F;
+        float tmpRet1 = 4.0F, tmpRet2 = 3.0F;
         int outLength = (int) (tmpRet2*Math.ceil(inLength/tmpRet1));
 
-        java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+        java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
 
-        for (int i = 0; i < outLength; i += 4) {
+        for (int i = 0; i < encoded.length; i += 4) {
             dBinary = 0;
-            int num = 0;
-
-            if (i + 0 < encoded.length && base64Decode[encoded[i + 0]] != -1) {
-                dBinary = (base64Decode[encoded[i + 0]] & 0xFF) << 18;
-                num++;
+            if (base64Decode[encoded[i]] != -1) {
+                dBinary = (base64Decode[encoded[i]] & 0xFF) << 18;
             }
+            // skip unknown characters
+            //else {
+            //    i++;
+            //    continue;
+            //}
+
+            int num = 0;
             if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
                 dBinary = dBinary | ((base64Decode[encoded[i + 1]] & 0xFF) << 12);
                 num++;
@@ -120,19 +124,13 @@ public class B64Encoder{
                 dBinary = dBinary | (base64Decode[encoded[i + 3]] & 0xFF);
                 num++;
             }
-            // skip unknown characters      //WFP-deal with this later.
-            //else {
-            //    i++;
-            //    continue;
-            //}
 
             while (num > 0) {
-                cBinary = (dBinary & 0xFF0000) >> 18;
+                int c = (dBinary & 0xFF0000) >> 16;
                 buffer.write((char) cBinary);
                 dBinary <<= 8;
                 num--;
             }
-            //i += 4;
         }
         byte[] decodedBytes = buffer.toByteArray();
         try {
