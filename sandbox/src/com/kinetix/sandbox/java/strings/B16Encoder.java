@@ -81,7 +81,7 @@ public class B16Encoder{
         dataStr.getChars(0, inLength, charArray, 0);
         byte[] dataBytes = dataStr.getBytes();
         byte cBinary = 0;
-        int dBinary = 0;
+        long dBinary = 0L;
 
         //out
         float tmpRet1 = 1.0F, tmpRet2 = 2.0F;
@@ -89,7 +89,6 @@ public class B16Encoder{
         byte encoded[] = new byte[outLength];
         //char[] charArray = new char[outLength];
         //dataStr.getChars(0, inLength, charArray, 0);
-
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
         String result = null;
@@ -104,11 +103,11 @@ public class B16Encoder{
             }
         }
         //byte encoded[] = new byte[(int) (tmpRet1 * Math.ceil(inLength / tmpRet2))];
-        pad = 0;
         //int encodedCount = 0;
         //pull 3 bytes to populate a single integer and convert to 2 chars for char[].
-        for (int i = 0; i < dataBytes.length; i += 3) {
-            dBinary = 0;
+        for (int i = 0; i < dataBytes.length; i += 6) {
+            dBinary = 0L;
+            pad = 0;
             dBinary = (((dataBytes[i + 0] & 0x3F) << 18) & 0xFFFFFF);
             if (i + 1 < dataBytes.length) {
                 dBinary |= ((dataBytes[i + 1] & 0x3F) << 14);
@@ -120,7 +119,7 @@ public class B16Encoder{
             } else {
                 pad++;
             }
-            for(int j=0; j<2-pad; j+=2) {
+            for(int j=0; j<5-pad; j+=2) {
                 byte eBinary = (byte) ((dBinary & 0xFF0000) >> 16);
                 buffer.append(base64Encode[eBinary]);
 
@@ -158,11 +157,6 @@ public class B16Encoder{
                 dBinary = ((base64Decode[encoded[i + 0]] & 0x3F) << 8);
                 //num++;
             }
-            //skip unknown characters
-            //else {
-            //    i++;
-            //    continue;
-            //}
             if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
                 dBinary |=  ((base64Decode[encoded[i + 1]] & 0x3F));
                 //num++;
@@ -175,15 +169,6 @@ public class B16Encoder{
             buffer.write((char) cBinary);
             cBinary = ((dBinary & 0x0F));
             buffer.write((char)cBinary);
-
-
-
-            //while (num > 0) {
-            //    int c = (dBinary & 0xFF0000) >> 16;
-            //    buffer.write((char) cBinary);
-            //    dBinary <<= 8;
-            //    num--;
-            //}
         }
 
         byte[] decodedBytes = buffer.toByteArray();

@@ -60,13 +60,13 @@ public class B32Encoder{
         char[] charArray = new char[inLength];
         dataStr.getChars(0, inLength, charArray, 0);
         byte cBinary = 0;
-        long dBinary = 0L, eBinary = 0L;
+        long dBinary = 0L;
 
         //out
         float tmpRet1 = 5.0F, tmpRet2 = 8.0F;
-        int outlength = (int) (tmpRet1 * Math.ceil((inLength / tmpRet2)));
-        byte encoded[]=new byte[outlength];
-        StringBuilder encodedResult = new StringBuilder(outlength);
+        int outLength = (int) (tmpRet1 * Math.ceil((inLength / tmpRet2)));
+        byte encoded[]=new byte[outLength];
+        StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
         String result = null;
         //byte convertedData[] = new byte[inLength];
@@ -105,24 +105,44 @@ public class B32Encoder{
                 encodedResult.append(base64Encode[(byte) eBinary]);
                 dBinary = dBinary << 5;
             }**/
-            dBinary = 0;
-            dBinary = (((dataBytes[i + 0] & 0x3F) << 18) & 0xFFFFFF);
+
+            dBinary = (((dataBytes[i + 0] & 0x1F) << 27) & 0xFFFFFFFFL);
+            //dBinary = dBinary << 3;
             if (i + 1 < dataBytes.length) {
-                dBinary |= ((dataBytes[i + 1] & 0x3F) << 14);
+                dBinary |= ((dataBytes[i + 1] & 0x1F) << 22);
+                //dBinary = dBinary << 8;
             } else {
                 pad++;
             }
             if (i + 2 < dataBytes.length){
-                dBinary |= ((dataBytes[i + 2] & 0x3F) << 10);
+                dBinary |= ((dataBytes[i + 2] & 0x1F) << 17);
+                //dBinary = dBinary << 8;
             } else {
                 pad++;
             }
-            for(int j=0; j<2-pad; j+=2) {
-                byte eBinary = (byte) ((dBinary & 0xFF0000) >> 16);
-                buffer.append(base64Encode[eBinary]);
+            if (i + 3 < dataBytes.length){
+                dBinary |= ((dataBytes[i + 3] & 0x1F) << 12);
+                //dBinary = dBinary << 8;
+            } else {
+                pad++;
+            }
+            if (i + 4 < dataBytes.length){
+                dBinary |= ((dataBytes[i + 4] & 0x1F) << 7);
+                //dBinary = dBinary << 8;
+            } else {
+                pad++;
+            }
+            if (i + 5 < dataBytes.length){
+                dBinary |= ((dataBytes[i + 5] & 0x1F) << 2);
+                //dBinary = dBinary << 8;
+            } else {
+                pad++;
+            }
 
-                byte fBinary = (byte) ((dBinary & 0xFF00) >> 10);
-                buffer.append(base64Encode[fBinary]);
+            for(int j=0; j<5-pad; j++) {
+                byte eBinary = (byte) ((dBinary & 0xFC000000L) >> 26);
+                dBinary = dBinary << 6;
+                buffer.append(base64Encode[eBinary]);
             }
         }
         //byte d = (byte) ((c & 0x0F0000) >> 14);
@@ -151,64 +171,50 @@ public class B32Encoder{
         String strBinary = new String("");
         String strText = new String("");
         Integer tempInt =new Integer(0);
-        int intTemp=0;
-        byte[] encodedData = dataStr.getBytes();
-        int length = encodedData.length;
-        java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+
+        //in
+        int inLength = dataStr.length();
+        byte[] encoded = dataStr.getBytes();
+        int cBinary = 0;
+        int dBinary = 0;
+
+        //out
+        float tmpRet1 = 5.0F, tmpRet2 = 8.0F;
+        int outLength = (int) (tmpRet2*Math.ceil(inLength/tmpRet1));
+        java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
 
-        /**
-         for(int i = 0; i < encodedData.length; i++){
-         if(encodedData[i] < 0){
-         intTemp = (int) encodedData[i] + 256;
-         }
-         else
-         intTemp = (int) encodedData[i];
-         strTemp = Integer.toBinaryString(intTemp);
-         while(strTemp.length() % 8 != 0){
-         strTemp = "0" + strTemp;
-         }
-         strBinary = strBinary + strTemp;
-         }
-         for(int i = 0; i < strBinary.length(); i = i + bit){
-         tempInt = tempInt.valueOf(strBinary.substring(i, i + bit), 2);
-         //strText = strText + toChar(tempInt.intValue());
-         }
-         **/
-
-        /******************** New Code *****************************/
-        for (int i = 0; i < length; ) {
-            int b = 0;
-            if (toCAMMAndImageDiskTypeDecode[encodedData[i]] != -1) {
-                b = (toCAMMAndImageDiskTypeDecode[encodedData[i]] & 0xFF) << 18;
+        for (int i = 0; i < encoded.length; i += 5) {
+            dBinary = 0;
+            //int num = 0;
+            if (base64Decode[encoded[i + 0]] != -1) {
+                dBinary = ((base64Decode[encoded[i + 0]] & 0x3F) << 32);
+                //num++;
             }
-            // skip unknown characters
-            else {
-                i++;
-                continue;
+            if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
+                dBinary |=  ((base64Decode[encoded[i + 1]] & 0x3F) << 24);
+                //num++;
+            }
+            if (i + 2 < encoded.length && base64Decode[encoded[i + 2]] != -1) {
+                dBinary |=  ((base64Decode[encoded[i + 2]] & 0x3F) << 16);
+                //num++;
+            }
+            if (i + 3 < encoded.length && base64Decode[encoded[i + 3]] != -1) {
+                dBinary |=  ((base64Decode[encoded[i + 3]] & 0x3F) << 8);
+                //num++;
+            }
+            if (i + 4 < encoded.length && base64Decode[encoded[i + 4]] != -1) {
+                dBinary |=  ((base64Decode[encoded[i + 4]] & 0x3F));
+                //num++;
             }
 
-            int num = 0;
-            if (i + 1 < length && toCAMMAndImageDiskTypeDecode[encodedData[i + 1]] != -1) {
-                b = b | ((toCAMMAndImageDiskTypeDecode[encodedData[i + 1]] & 0xFF) << 12);
-                num++;
-            }
-            if (i + 2 < length && toCAMMAndImageDiskTypeDecode[encodedData[i + 2]] != -1) {
-                b = b | ((toCAMMAndImageDiskTypeDecode[encodedData[i + 2]] & 0xFF) << 6);
-                num++;
-            }
-            if (i + 3 < length && toCAMMAndImageDiskTypeDecode[encodedData[i + 3]] != -1) {
-                b = b | (toCAMMAndImageDiskTypeDecode[encodedData[i + 3]] & 0xFF);
-                num++;
-            }
-
-            while (num > 0) {
-                int c = (b & 0xFF0000) >> 16;
-                buffer.write((char) c);
-                b <<= 8;
-                num--;
-            }
-            i += 4;
+            cBinary = ((dBinary & 0x3C00) >> 10);
+            buffer.write((char) cBinary);
+            cBinary = ((dBinary & 0x0300) >> 6);
+            cBinary |= ((dBinary & 0x30) >> 4);
+            buffer.write((char) cBinary);
+            cBinary = ((dBinary & 0x0F));
+            buffer.write((char)cBinary);
         }
         byte[] decodedBytes = buffer.toByteArray();
         try {
