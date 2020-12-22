@@ -66,10 +66,8 @@ public class B32Encoder{
         //out
         int outLength = (int) (tmpRet2 * Math.ceil((inLength/tmpRet1)));
         System.out.println("calculated encoding length: "+outLength);
-        //byte encoded[]=new byte[outLength];
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
-        //byte convertedData[] = new byte[inLength];
 
 
         //convert char[] to byte[] using Base16 decoding
@@ -89,31 +87,26 @@ public class B32Encoder{
             //dBinary = dBinary << 3;
             if (i + 1 < dataBytes.length) {
                 dBinary |= ((dataBytes[i + 1] & 0x1F) << 22);
-                //dBinary = dBinary << 8;
             } else {
                 pad++;
             }
             if (i + 2 < dataBytes.length){
                 dBinary |= ((dataBytes[i + 2] & 0x1F) << 17);
-                //dBinary = dBinary << 8;
             } else {
                 pad++;
             }
             if (i + 3 < dataBytes.length){
                 dBinary |= ((dataBytes[i + 3] & 0x1F) << 12);
-                //dBinary = dBinary << 8;
             } else {
                 pad++;
             }
             if (i + 4 < dataBytes.length){
                 dBinary |= ((dataBytes[i + 4] & 0x1F) << 7);
-                //dBinary = dBinary << 8;
             } else {
                 pad++;
             }
             if (i + 5 < dataBytes.length){
                 dBinary |= ((dataBytes[i + 5] & 0x1F) << 2);
-                //dBinary = dBinary << 8;
             } else {
                 pad++;
             }
@@ -151,40 +144,26 @@ public class B32Encoder{
             dBinary = 0L;
             num = 0;
             if (base64Decode[encoded[i + 0]] != -1) {
-                dBinary = ((base64Decode[encoded[i + 0]] & 0x3F) << 34);
-                num++;
+                dBinary = ((base64Decode[encoded[i + 0]] & 0x3FL) << 34);
             }
             if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
-                dBinary |= ((base64Decode[encoded[i + 1]] & 0x3F) << 28);
-                num++;
+                dBinary |= ((base64Decode[encoded[i + 1]] & 0x3FL) << 28);
             }
             if (i + 2 < encoded.length && base64Decode[encoded[i + 2]] != -1) {
-                dBinary |= ((base64Decode[encoded[i + 2]] & 0x3F) << 22);
-                num++;
+                dBinary |= ((base64Decode[encoded[i + 2]] & 0x3FL) << 22);
             }
             if (i + 3 < encoded.length && base64Decode[encoded[i + 3]] != -1) {
-                dBinary |= ((base64Decode[encoded[i + 3]] & 0x3F) << 16);
-                num++;
+                dBinary |= ((base64Decode[encoded[i + 3]] & 0x3FL) << 16);
             }
             if (i + 4 < encoded.length && base64Decode[encoded[i + 4]] != -1) {
-                dBinary |= ((base64Decode[encoded[i + 4]] & 0x3F) << 10);
-                num++;
+                dBinary |= ((base64Decode[encoded[i + 4]] & 0x3FL) << 10);
             }
-            while (num > 0) {
-                cBinary = (int) ((dBinary & 0x1F00000000L) >> 35);
+            while (num < 6 ) {
+                cBinary = (int) ((dBinary & 0xF800000000L) >> 35);
                 buffer.write((char) cBinary);
                 dBinary <<= 5;
-                num--;
+                num++;
             }
-
-
-            //cBinary = ((dBinary & 0x3C));
-            //buffer.write((char) cBinary);
-            //cBinary = ((dBinary & 0x0300) >> 6);
-            //cBinary |= ((dBinary & 0x30) >> 4);
-            //buffer.write((char) cBinary);
-            //cBinary = ((dBinary & 0x0F));
-            //buffer.write((char)cBinary);
         }
         byte[] decodedBytes = buffer.toByteArray();
         char[] outputChars = new char[outLength];
@@ -194,16 +173,6 @@ public class B32Encoder{
         decodedStr = new String(outputChars);
 
         return decodedStr;
-
-        //byte[] decodedBytes = buffer.toByteArray();
-        //try {
-        //    decodedStr = new String(decodedBytes, 0, decodedBytes.length,
-        //            "UTF-8");
-        //} catch (java.io.UnsupportedEncodingException e) {
-        //    e.printStackTrace();
-        //}
-        //return decodedStr;
-
     }
 
 
@@ -211,10 +180,10 @@ public class B32Encoder{
 
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
+
         String encodedResult = B32Encoder.encode(testStr);
         System.out.println("Encoded result: "+ encodedResult);
         System.out.println("Encoded result string length: "+encodedResult.length());
-
 
         String decodedStr = B32Encoder.decode(encodedResult);
         System.out.println("Decoded result: " + decodedStr);
