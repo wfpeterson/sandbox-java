@@ -3,7 +3,7 @@ package com.kinetix.sandbox.java.strings;
 public class B16Encoder{
 
     final static public char PADDING = '=';
-    final static public float tmpRet1 = 3.0F, tmpRet2 = 2.0F;
+    final static public float sourceCount = 3.0F, encodedCount = 2.0F;
 
     private static final char[] base64Encode = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
@@ -85,7 +85,7 @@ public class B16Encoder{
         int dBinary = 0;
 
         //out
-        int outLength = (int) (tmpRet2 * Math.ceil(inLength / tmpRet1));
+        int outLength = (int) (encodedCount * Math.ceil(inLength / sourceCount));
         System.out.println("calculated encoding length: "+outLength);
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
@@ -100,10 +100,10 @@ public class B16Encoder{
             }
         }
         //pull 3 bytes to populate a single integer and convert to 2 chars for char[].
-        for (int i = 0; i < dataBytes.length; i += 3) {
+        for (int i = 0; i < dataBytes.length; i += ((int) sourceCount)) {
             dBinary = 0;
             pad = 0;
-            dBinary = (((dataBytes[i + 0] & 0x0F) << 12) & 0xFFFF);
+            dBinary = (((dataBytes[i + 0] & 0x0F) << 12)); //& 0xFFFF);
             if (i + 1 < dataBytes.length) {
                 dBinary |= ((dataBytes[i + 1] & 0x0F) << 8);
             } else {
@@ -114,7 +114,7 @@ public class B16Encoder{
             } else {
                 pad++;
             }
-            for(int j=0; j<2-pad; j++) {
+            for(int j=0; j<((int) encodedCount)-pad; j++) {
                 byte eBinary = (byte) ((dBinary & 0xFC00) >> 10);
                 dBinary = dBinary << 6;
                 buffer.append(base64Encode[eBinary]);
@@ -137,24 +137,22 @@ public class B16Encoder{
         int dBinary = 0;
 
         //out
-        int outLength = (int) (tmpRet1*Math.ceil(inLength/tmpRet2));
+        int outLength = (int) (sourceCount *Math.ceil(inLength/ encodedCount));
         System.out.println("calculated decoding length: " + outLength);
         int num = 0;
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
 
-        for (int i = 0; i < encoded.length; i += 2) {
+        for (int i = 0; i < encoded.length; i += ((int) encodedCount)) {
             dBinary = 0;
             num = 0;
             if (base64Decode[encoded[i + 0]] != -1) {
                 dBinary = ((base64Decode[encoded[i + 0]] & 0x3F) << 10);
-                //num++;
             }
             if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
                 dBinary |=  ((base64Decode[encoded[i + 1]] & 0x3F) << 4);
-                //num++;
             }
-            while (num < 3 ) {
+            while (num < ((int) sourceCount)) {
                 cBinary = (int) ((dBinary & 0xF000) >> 12);
                 buffer.write((char) cBinary);
                 dBinary <<= 4;
@@ -175,6 +173,8 @@ public class B16Encoder{
     public static void main(String[] args){
 
         String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
+        //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.908732184";
+        //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
         String encodedResult = B16Encoder.encode(testStr);
         System.out.println("Encoded result: "+ encodedResult);

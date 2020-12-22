@@ -3,7 +3,7 @@ package com.kinetix.sandbox.java.strings;
 public class B64Encoder{
 
     final static public char PADDING = '=';
-    final static public float tmpRet1 = 3.0F, tmpRet2 = 4.0F;
+    final static public float sourceCount = 3.0F, encodedCount = 4.0F;
 
     private static final char[] base64Encode = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
@@ -39,17 +39,17 @@ public class B64Encoder{
         int cBinary = 0, dBinary = 0;
 
         //out
-        int outLength = (int) (tmpRet2*Math.ceil(inLength/tmpRet1));
+        int outLength = (int) (encodedCount *Math.ceil(inLength/ sourceCount));
         System.out.println("calculated encoding length: "+outLength);
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
 
 
-        for(int i = 0; i < inLength; i += 3){
+        for(int i = 0; i < inLength; i += ((int) sourceCount)){
             cBinary = 0;
 
             if(i + 0 < charArray.length){
-                cBinary = ((charArray[i + 0] & 0xFF) << 16) & 0xFFFFFF;
+                cBinary = ((charArray[i + 0] & 0xFF) << 16); //& 0xFFFFFF;
             }
             else{
                 pad++;
@@ -66,7 +66,7 @@ public class B64Encoder{
             else{
                 pad++;
             }
-            for(int j=0; j<4-pad; j++){
+            for(int j=0; j<((int) encodedCount)-pad; j++){
                 dBinary = 0;
                 dBinary = (cBinary & 0xFC0000) >> 18;
                 buffer.append(base64Encode[dBinary]);
@@ -89,14 +89,14 @@ public class B64Encoder{
         int dBinary = 0;
         
         //out
-        int outLength = (int) (tmpRet1*Math.ceil(inLength/tmpRet2));
+        int outLength = (int) (sourceCount *Math.ceil(inLength/ encodedCount));
         System.out.println("calculated decoding length: " + outLength);
         int num = 0;
 
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
 
-        for (int i = 0; i < encoded.length; i += 4) {
+        for (int i = 0; i < encoded.length; i += ((int) encodedCount)) {
             dBinary = 0;
             num = 0;
             if (base64Decode[encoded[i + 0]] != -1) {
@@ -104,29 +104,28 @@ public class B64Encoder{
             }
             if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 1]] & 0x3F) << 12);
-                num++;
             }
             if (i + 2 < encoded.length && base64Decode[encoded[i + 2]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 2]] & 0x3F) << 6);
-                num++;
             }
             if (i + 3 < encoded.length && base64Decode[encoded[i + 3]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 3]] & 0x3F)) ;
-                num++;
             }
-            while (num > 0) {
+            while (num < ((int) sourceCount)) {
                 cBinary = ((dBinary & 0xFF0000) >> 16);
                 buffer.write((char) cBinary);
                 dBinary <<= 8;
-                num--;
+                num++;
             }
         }
+
         byte[] decodedBytes = buffer.toByteArray();
-        try {
-            decodedStr = new String(decodedBytes, 0, decodedBytes.length, "UTF-8");
-        } catch (java.io.UnsupportedEncodingException e) {
-            e.printStackTrace();
+        char[] outputChars = new char[outLength];
+        for(int j=0; j<outLength; j++){
+            outputChars[j] = (char) decodedBytes[j];
         }
+        decodedStr = new String(outputChars);
+
         return decodedStr;
     }
 
@@ -134,6 +133,9 @@ public class B64Encoder{
     public static void main(String[] args){
 
         String testStr = "This is a test of Base64 encoding/decoding";
+        //String testStr = "This is a test of Base64 encoding/decodin";
+        //String testStr = "This is a test of Base64 encoding/decodi";
+
 
         String encodedResult = B64Encoder.encode(testStr);
         System.out.println("Encoded result: "+ encodedResult);

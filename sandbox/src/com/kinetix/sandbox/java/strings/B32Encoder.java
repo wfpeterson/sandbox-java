@@ -3,7 +3,7 @@ package com.kinetix.sandbox.java.strings;
 public class B32Encoder{
 
     final static public char PADDING = '=';
-    final static public float tmpRet1 = 6.0F, tmpRet2 = 5.0F;
+    final static public float sourceCount = 6.0F, encodedCount = 5.0F;
 
     private static final char[] base64Encode = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
@@ -64,11 +64,10 @@ public class B32Encoder{
         long dBinary = 0L;
 
         //out
-        int outLength = (int) (tmpRet2 * Math.ceil((inLength/tmpRet1)));
+        int outLength = (int) (encodedCount * Math.ceil((inLength/ sourceCount)));
         System.out.println("calculated encoding length: "+outLength);
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
-
 
         //convert char[] to byte[] using Base16 decoding
         for (int j = 0; j < inLength; j++) {
@@ -80,11 +79,10 @@ public class B32Encoder{
         }
 
         //pull 6 bytes to populate a single long integer and convert to 5 chars for char[] using Base64 encoding.
-        for(int i=0; i<dataBytes.length ; i+=6){
+        for(int i=0; i<dataBytes.length ; i+=((int) sourceCount)){
             pad = 0;
             dBinary = 0L;
-            dBinary = (((dataBytes[i + 0] & 0x1F) << 27) & 0xFFFFFFFFL);
-            //dBinary = dBinary << 3;
+            dBinary = (((dataBytes[i + 0] & 0x1F) << 27)); //& 0xFFFFFFFFL);
             if (i + 1 < dataBytes.length) {
                 dBinary |= ((dataBytes[i + 1] & 0x1F) << 22);
             } else {
@@ -111,7 +109,7 @@ public class B32Encoder{
                 pad++;
             }
 
-            for(int j=0; j<5-pad; j++) {
+            for(int j=0; j<((int) encodedCount)-pad; j++) {
                 byte eBinary = (byte) ((dBinary & 0xFC000000L) >> 26);
                 dBinary = dBinary << 6;
                 buffer.append(base64Encode[eBinary]);
@@ -134,13 +132,13 @@ public class B32Encoder{
         long dBinary = 0L;
 
         //out
-        int outLength = (int) (tmpRet1*Math.ceil(inLength/tmpRet2));
+        int outLength = (int) (sourceCount *Math.ceil(inLength/ encodedCount));
         System.out.println("calculated decoding length: " + outLength);
         int num = 0;
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
 
-        for (int i = 0; i < encoded.length; i += 5) {
+        for (int i = 0; i < encoded.length; i += ((int) encodedCount)) {
             dBinary = 0L;
             num = 0;
             if (base64Decode[encoded[i + 0]] != -1) {
@@ -158,7 +156,7 @@ public class B32Encoder{
             if (i + 4 < encoded.length && base64Decode[encoded[i + 4]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 4]] & 0x3FL) << 10);
             }
-            while (num < 6 ) {
+            while (num < ((int) sourceCount) ) {
                 cBinary = (int) ((dBinary & 0xF800000000L) >> 35);
                 buffer.write((char) cBinary);
                 dBinary <<= 5;
@@ -178,8 +176,10 @@ public class B32Encoder{
 
     public static void main(String[] args){
 
-        //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
-        String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
+        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
+        //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
+        //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-";
+        //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c";
 
         String encodedResult = B32Encoder.encode(testStr);
         System.out.println("Encoded result: "+ encodedResult);
