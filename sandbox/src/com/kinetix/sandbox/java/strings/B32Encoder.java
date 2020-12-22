@@ -3,6 +3,7 @@ package com.kinetix.sandbox.java.strings;
 public class B32Encoder{
 
     final static public char PADDING = '=';
+    final static public float tmpRet1 = 6.0F, tmpRet2 = 5.0F;
 
     private static final char[] base64Encode = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
@@ -63,12 +64,11 @@ public class B32Encoder{
         long dBinary = 0L;
 
         //out
-        float tmpRet1 = 5.0F, tmpRet2 = 8.0F;
-        int outLength = (int) (tmpRet1 * Math.ceil((inLength / tmpRet2)));
-        byte encoded[]=new byte[outLength];
+        int outLength = (int) (tmpRet2 * Math.ceil((inLength/tmpRet1)));
+        System.out.println("calculated encoding length: "+outLength);
+        //byte encoded[]=new byte[outLength];
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
-        String result = null;
         //byte convertedData[] = new byte[inLength];
 
 
@@ -85,27 +85,6 @@ public class B32Encoder{
         for(int i=0; i<dataBytes.length ; i+=6){
             pad = 0;
             dBinary = 0L;
-            /**
-            for(int j=0; j<5; j++){
-                if(i + j < dataBytes.length){
-                    dBinary |= (dataBytes[i + j] & 0xFF);
-                    if(j < 4){
-                        dBinary = dBinary << 8;
-                    }
-                }
-                else{
-                    pad++;
-                }
-            }
-            for(int k=0; k<5-pad; k++){
-                eBinary = 0L;
-                eBinary = (dBinary & 0x00F800000000L);
-                eBinary >>= 35;
-                //convertedData[k] = (byte) d;
-                encodedResult.append(base64Encode[(byte) eBinary]);
-                dBinary = dBinary << 5;
-            }**/
-
             dBinary = (((dataBytes[i + 0] & 0x1F) << 27) & 0xFFFFFFFFL);
             //dBinary = dBinary << 3;
             if (i + 1 < dataBytes.length) {
@@ -145,85 +124,85 @@ public class B32Encoder{
                 buffer.append(base64Encode[eBinary]);
             }
         }
-        //byte d = (byte) ((c & 0x0F0000) >> 14);
-        //byte e = (byte) ((c & 0x000C00) >> 10);
-        //d |= e;
-        //encoded[encodedCount] = d;
-        //encodedCount++;
-        //byte f = (byte) ((c & 0x000300) >> 4);
-        //byte g = (byte) (c & 0x00000F);
-        //f |= g;
-        //encoded[encodedCount] = f;
-        //encodedCount++;
-        //convert encoded byte[] to char[] using Base64 table
-        //char[] charArray = new char[encoded.length];
-        for(int k=0; k<pad; k++){
+        for(int n=0; n<pad; n++){
             buffer.append(PADDING);
         }
         //convert char[] to string
-        result = buffer.toString();
-        return result;
+        return buffer.toString();
     }
 
 
     public static String decode(String dataStr) {
-        String strTemp = new String("");
-        String strBinary = new String("");
-        String strText = new String("");
-        Integer tempInt =new Integer(0);
 
         //in
         int inLength = dataStr.length();
         byte[] encoded = dataStr.getBytes();
         int cBinary = 0;
-        int dBinary = 0;
+        long dBinary = 0L;
 
         //out
-        float tmpRet1 = 5.0F, tmpRet2 = 8.0F;
-        int outLength = (int) (tmpRet2*Math.ceil(inLength/tmpRet1));
+        int outLength = (int) (tmpRet1*Math.ceil(inLength/tmpRet2));
+        System.out.println("calculated decoding length: " + outLength);
+        int num = 0;
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
 
         for (int i = 0; i < encoded.length; i += 5) {
-            dBinary = 0;
-            //int num = 0;
+            dBinary = 0L;
+            num = 0;
             if (base64Decode[encoded[i + 0]] != -1) {
-                dBinary = ((base64Decode[encoded[i + 0]] & 0x3F) << 32);
-                //num++;
+                dBinary = ((base64Decode[encoded[i + 0]] & 0x3F) << 34);
+                num++;
             }
             if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
-                dBinary |=  ((base64Decode[encoded[i + 1]] & 0x3F) << 24);
-                //num++;
+                dBinary |= ((base64Decode[encoded[i + 1]] & 0x3F) << 28);
+                num++;
             }
             if (i + 2 < encoded.length && base64Decode[encoded[i + 2]] != -1) {
-                dBinary |=  ((base64Decode[encoded[i + 2]] & 0x3F) << 16);
-                //num++;
+                dBinary |= ((base64Decode[encoded[i + 2]] & 0x3F) << 22);
+                num++;
             }
             if (i + 3 < encoded.length && base64Decode[encoded[i + 3]] != -1) {
-                dBinary |=  ((base64Decode[encoded[i + 3]] & 0x3F) << 8);
-                //num++;
+                dBinary |= ((base64Decode[encoded[i + 3]] & 0x3F) << 16);
+                num++;
             }
             if (i + 4 < encoded.length && base64Decode[encoded[i + 4]] != -1) {
-                dBinary |=  ((base64Decode[encoded[i + 4]] & 0x3F));
-                //num++;
+                dBinary |= ((base64Decode[encoded[i + 4]] & 0x3F) << 10);
+                num++;
+            }
+            while (num > 0) {
+                cBinary = (int) ((dBinary & 0x1F00000000L) >> 35);
+                buffer.write((char) cBinary);
+                dBinary <<= 5;
+                num--;
             }
 
-            cBinary = ((dBinary & 0x3C00) >> 10);
-            buffer.write((char) cBinary);
-            cBinary = ((dBinary & 0x0300) >> 6);
-            cBinary |= ((dBinary & 0x30) >> 4);
-            buffer.write((char) cBinary);
-            cBinary = ((dBinary & 0x0F));
-            buffer.write((char)cBinary);
+
+            //cBinary = ((dBinary & 0x3C));
+            //buffer.write((char) cBinary);
+            //cBinary = ((dBinary & 0x0300) >> 6);
+            //cBinary |= ((dBinary & 0x30) >> 4);
+            //buffer.write((char) cBinary);
+            //cBinary = ((dBinary & 0x0F));
+            //buffer.write((char)cBinary);
         }
         byte[] decodedBytes = buffer.toByteArray();
-        try {
-            decodedStr = new String(decodedBytes, 0, decodedBytes.length,
-                    "UTF-8");
-        } catch (java.io.UnsupportedEncodingException e) {
-            e.printStackTrace();
+        char[] outputChars = new char[outLength];
+        for(int j=0; j<outLength; j++){
+            outputChars[j] = toCAMMAndImageDiskTypeEncode[decodedBytes[j]];
         }
+        decodedStr = new String(outputChars);
+
         return decodedStr;
+
+        //byte[] decodedBytes = buffer.toByteArray();
+        //try {
+        //    decodedStr = new String(decodedBytes, 0, decodedBytes.length,
+        //            "UTF-8");
+        //} catch (java.io.UnsupportedEncodingException e) {
+        //    e.printStackTrace();
+        //}
+        //return decodedStr;
 
     }
 

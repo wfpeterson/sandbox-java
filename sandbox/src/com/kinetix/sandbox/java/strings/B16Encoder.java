@@ -145,7 +145,7 @@ public class B16Encoder{
         int dBinary = 0;
 
         //out
-        float tmpRet1 = 4.0F, tmpRet2 = 3.0F;
+        float tmpRet1 = 2.0F, tmpRet2 = 1.0F;
         int outLength = (int) (tmpRet2*Math.ceil(inLength/tmpRet1));
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;

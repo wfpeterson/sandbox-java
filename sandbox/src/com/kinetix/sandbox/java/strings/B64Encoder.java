@@ -3,6 +3,7 @@ package com.kinetix.sandbox.java.strings;
 public class B64Encoder{
 
     final static public char PADDING = '=';
+    final static public float tmpRet1 = 3.0F, tmpRet2 = 4.0F;
 
     private static final char[] base64Encode = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
@@ -38,11 +39,11 @@ public class B64Encoder{
         int cBinary = 0, dBinary = 0;
 
         //out
-        float tmpRet1 = 4.0F, tmpRet2 = 3.0F;
-        ////byte encoded[]=new byte[(int)(tmpRet1*Math.ceil(inLength/tmpRet2))];
-        int outLength = (int) (tmpRet1*Math.ceil(inLength/tmpRet2));
+        int outLength = (int) (tmpRet2*Math.ceil(inLength/tmpRet1));
+        System.out.println("calculated encoding length: "+outLength);
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
+
 
         for(int i = 0; i < inLength; i += 3){
             cBinary = 0;
@@ -65,12 +66,6 @@ public class B64Encoder{
             else{
                 pad++;
             }
-            //if(i + 3 < charArray.length){
-            //    cBinary |= ((charArray[i + 3] & 0xFF));
-            //}
-            //else{
-            //    pad++;
-            //}
             for(int j=0; j<4-pad; j++){
                 dBinary = 0;
                 dBinary = (cBinary & 0xFC0000) >> 18;
@@ -85,48 +80,42 @@ public class B64Encoder{
     }
 
 
-
     public static String decode(String dataStr) {
 
         //in
         int inLength = dataStr.length();
         byte[] encoded = dataStr.getBytes();
-        int cBinary = 0, dBinary = 0;
+        int cBinary = 0;
+        int dBinary = 0;
         
         //out
-        float tmpRet1 = 4.0F, tmpRet2 = 3.0F;
-        int outLength = (int) (tmpRet2*Math.ceil(inLength/tmpRet1));
+        int outLength = (int) (tmpRet1*Math.ceil(inLength/tmpRet2));
+        System.out.println("calculated decoding length: " + outLength);
+        int num = 0;
 
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
 
         for (int i = 0; i < encoded.length; i += 4) {
             dBinary = 0;
-            if (base64Decode[encoded[i]] != -1) {
-                dBinary = (base64Decode[encoded[i]] & 0xFF) << 18;
+            num = 0;
+            if (base64Decode[encoded[i + 0]] != -1) {
+                dBinary = (base64Decode[encoded[i + 0]] & 0x3F) << 18;
             }
-            // skip unknown characters
-            //else {
-            //    i++;
-            //    continue;
-            //}
-
-            int num = 0;
             if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
-                dBinary = dBinary | ((base64Decode[encoded[i + 1]] & 0xFF) << 12);
+                dBinary |= ((base64Decode[encoded[i + 1]] & 0x3F) << 12);
                 num++;
             }
             if (i + 2 < encoded.length && base64Decode[encoded[i + 2]] != -1) {
-                dBinary = dBinary | ((base64Decode[encoded[i + 2]] & 0xFF) << 6);
+                dBinary |= ((base64Decode[encoded[i + 2]] & 0x3F) << 6);
                 num++;
             }
             if (i + 3 < encoded.length && base64Decode[encoded[i + 3]] != -1) {
-                dBinary = dBinary | (base64Decode[encoded[i + 3]] & 0xFF);
+                dBinary |= ((base64Decode[encoded[i + 3]] & 0x3F)) ;
                 num++;
             }
-
             while (num > 0) {
-                int c = (dBinary & 0xFF0000) >> 16;
+                cBinary = ((dBinary & 0xFF0000) >> 16);
                 buffer.write((char) cBinary);
                 dBinary <<= 8;
                 num--;
@@ -134,8 +123,7 @@ public class B64Encoder{
         }
         byte[] decodedBytes = buffer.toByteArray();
         try {
-            decodedStr = new String(decodedBytes, 0, decodedBytes.length,
-                    "UTF-8");
+            decodedStr = new String(decodedBytes, 0, decodedBytes.length, "UTF-8");
         } catch (java.io.UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -145,13 +133,11 @@ public class B64Encoder{
 
     public static void main(String[] args){
 
-        //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         String testStr = "This is a test of Base64 encoding/decoding";
-        //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
+
         String encodedResult = B64Encoder.encode(testStr);
         System.out.println("Encoded result: "+ encodedResult);
         System.out.println("Encoded result string length: "+encodedResult.length());
-
 
         String decodedStr = B64Encoder.decode(encodedResult);
         System.out.println("Decoded result: " + decodedStr);
