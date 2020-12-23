@@ -172,10 +172,9 @@ public class B16Encoder{
 
     public static void main(String[] args){
 
-        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
-        //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.908732184";
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
-        //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
+        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321";
+        //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         String encodedResult = B16Encoder.encode(testStr);
         System.out.println("Encoded result: "+ encodedResult);
         System.out.println("Encoded result string length: "+encodedResult.length());

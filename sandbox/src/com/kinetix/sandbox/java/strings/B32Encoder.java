@@ -115,9 +115,9 @@ public class B32Encoder{
                 buffer.append(base64Encode[eBinary]);
             }
         }
-        for(int n=0; n<pad; n++){
-            buffer.append(PADDING);
-        }
+        //for(int n=0; n<pad; n++){
+        //    buffer.append(PADDING);
+        //}
         //convert char[] to string
         return buffer.toString();
     }
@@ -156,7 +156,7 @@ public class B32Encoder{
             if (i + 4 < encoded.length && base64Decode[encoded[i + 4]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 4]] & 0x3FL) << 10);
             }
-            while (num < ((int) sourceCount) ) {
+            while (num < ((int) sourceCount)) {
                 cBinary = (int) ((dBinary & 0xF800000000L) >> 35);
                 buffer.write((char) cBinary);
                 dBinary <<= 5;
@@ -176,10 +176,10 @@ public class B32Encoder{
 
     public static void main(String[] args){
 
-        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
+        //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
         //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-";
-        //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c";
+        String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c";
 
         String encodedResult = B32Encoder.encode(testStr);
         System.out.println("Encoded result: "+ encodedResult);

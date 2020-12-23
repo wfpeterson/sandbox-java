@@ -73,9 +73,9 @@ public class B64Encoder{
                 cBinary <<= 6;
             }
         }
-        for(int n=0; n<pad; n++){
-            buffer.append(PADDING);
-        }
+        //for(int n=0; n<pad; n++){
+        //    buffer.append(PADDING);
+        //}
         return buffer.toString();
     }
 
@@ -132,8 +132,8 @@ public class B64Encoder{
 
     public static void main(String[] args){
 
-        String testStr = "This is a test of Base64 encoding/decoding";
-        //String testStr = "This is a test of Base64 encoding/decodin";
+        //String testStr = "This is a test of Base64 encoding/decoding";
+        String testStr = "This is a test of Base64 encoding/decodin";
         //String testStr = "This is a test of Base64 encoding/decodi";
 
 
