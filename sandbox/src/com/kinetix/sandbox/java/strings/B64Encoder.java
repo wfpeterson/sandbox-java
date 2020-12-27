@@ -133,7 +133,7 @@ public class B64Encoder{
     public static void main(String[] args){
 
         //String testStr = "This is a test of Base64 encoding/decoding";
-        String testStr = "This is a test of Base64 encoding/decodin";
+        String testStr = "This is a test of Base64 encoding/decoding";
         //String testStr = "This is a test of Base64 encoding/decodi";
 
 

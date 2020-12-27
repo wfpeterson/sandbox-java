@@ -65,6 +65,9 @@ public class B32Encoder{
 
         //out
         int outLength = (int) (encodedCount * Math.ceil((inLength/ sourceCount)));
+        int temp1 = (int) (inLength % sourceCount);
+        int temp2 = (int) (inLength % encodedCount);
+
         System.out.println("calculated encoding length: "+outLength);
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
@@ -85,9 +88,9 @@ public class B32Encoder{
             dBinary = (((dataBytes[i + 0] & 0x1F) << 27)); //& 0xFFFFFFFFL);
             if (i + 1 < dataBytes.length) {
                 dBinary |= ((dataBytes[i + 1] & 0x1F) << 22);
-            } else {
-                pad++;
-            }
+            } //else {
+            //    pad++;
+            //}
             if (i + 2 < dataBytes.length){
                 dBinary |= ((dataBytes[i + 2] & 0x1F) << 17);
             } else {
@@ -118,6 +121,7 @@ public class B32Encoder{
         //for(int n=0; n<pad; n++){
         //    buffer.append(PADDING);
         //}
+
         //convert char[] to string
         return buffer.toString();
     }
@@ -133,6 +137,9 @@ public class B32Encoder{
 
         //out
         int outLength = (int) (sourceCount *Math.ceil(inLength/ encodedCount));
+        int temp3 = (int) (inLength % sourceCount);
+        int temp4 = (int) (inLength % encodedCount);
+
         System.out.println("calculated decoding length: " + outLength);
         int num = 0;
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
@@ -164,8 +171,8 @@ public class B32Encoder{
             }
         }
         byte[] decodedBytes = buffer.toByteArray();
-        char[] outputChars = new char[outLength];
-        for(int j=0; j<outLength; j++){
+        char[] outputChars = new char[decodedBytes.length];
+        for(int j=0; j<decodedBytes.length; j++){
             outputChars[j] = toCAMMAndImageDiskTypeEncode[decodedBytes[j]];
         }
         decodedStr = new String(outputChars);
@@ -179,7 +186,10 @@ public class B32Encoder{
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
         //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-";
-        String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c";
+        String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
+        System.out.println("Initial string: "+ testStr);
+        System.out.println("Initial string length: "+testStr.length());
+
 
         String encodedResult = B32Encoder.encode(testStr);
         System.out.println("Encoded result: "+ encodedResult);
