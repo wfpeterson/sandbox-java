@@ -88,6 +88,8 @@ public class B16Encoder{
         int outLength = (int) ((encodedCount * Math.ceil(inLength/sourceCount)));   // - (inLength % sourceCount));
         int temp1 = (int) (inLength % sourceCount);
         int temp2 = (int) (inLength % encodedCount);
+        int temp3 = (int) (outLength % sourceCount);
+        int temp4 = (int) (outLength % encodedCount);
 
         System.out.println("calculated encoding length: "+outLength);
         StringBuilder buffer = new StringBuilder(outLength);
@@ -103,7 +105,7 @@ public class B16Encoder{
             }
         }
         //pull 3 bytes to populate a single integer and convert to 2 chars for char[].
-        for (int i = 0; i < dataBytes.length; i += ((int) sourceCount)) {
+        for (int i = 0; i < inLength; i += ((int) sourceCount)) {
             dBinary = 0;
             pad = 0;
             if(i + 0 < dataBytes.length){
@@ -125,10 +127,10 @@ public class B16Encoder{
                 pad++;
             }
             for(int j=0; j<((int) encodedCount)-pad; j++) {
-                byte eBinary = (byte) ((dBinary & 0xFC00) >> 10);
+                cBinary = 0;
+                cBinary = (byte) ((dBinary & 0xFC00) >> 10);
+                buffer.append(base64Encode[cBinary]);
                 dBinary = dBinary << 6;
-                buffer.append(base64Encode[eBinary]);
-
             }
         }
         //for(int k=0; k<pad; k++){
@@ -148,36 +150,41 @@ public class B16Encoder{
         int dBinary = 0;
 
         //out
-        int outLength = (int) ((sourceCount *Math.ceil(inLength/encodedCount)));        // - (inLength % encodedCount));
-        int temp3 = (int) (inLength % sourceCount);
-        int temp4 = (int) (inLength % encodedCount);
+        int outLength = (int) ((sourceCount * Math.ceil(inLength/encodedCount)));        // - (inLength % sourceCount));
+        //outLength -= (outLength % sourceCount);
+        int temp1 = (int) (inLength % sourceCount);
+        int temp2 = (int) (inLength % encodedCount);
+        int temp3 = (int) (outLength % sourceCount);
+        int temp4 = (int) (outLength % encodedCount);
 
         System.out.println("calculated decoding length: " + outLength);
         int num = 0;
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
+        int lastDecodedArrayItem = 0;
 
         for (int i = 0; i < encoded.length; i += ((int) encodedCount)) {
             dBinary = 0;
-            num = 0;
+            num = 1;
             if (base64Decode[encoded[i + 0]] != -1) {
                 dBinary = ((base64Decode[encoded[i + 0]] & 0x3F) << 10);
-                //num++;
+                num++;
             }
             if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
                 dBinary |=  ((base64Decode[encoded[i + 1]] & 0x3F) << 4);
-                //num++;
+                num++;
             }
-            while (num < ((int)sourceCount)) {
+            while (num > 0){
                 cBinary = (int) ((dBinary & 0xF000) >> 12);
                 buffer.write((char) cBinary);
                 dBinary <<= 4;
-                num++;
+                num--;
+                lastDecodedArrayItem++;
             }
         }
         byte[] decodedBytes = buffer.toByteArray();
-        char[] outputChars = new char[decodedBytes.length];
-        for(int j=0; j<decodedBytes.length; j++){
+        char[] outputChars = new char[lastDecodedArrayItem];
+        for(int j=0; j<lastDecodedArrayItem; j++){
             outputChars[j] = toInstanceUIDTypeEncode[decodedBytes[j]];
         }
         decodedStr = new String(outputChars);
@@ -189,7 +196,7 @@ public class B16Encoder{
     public static void main(String[] args){
 
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
-        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.908732184";
+        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.90873218";
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         System.out.println("Initial string: "+ testStr);
         System.out.println("Initial string length: "+testStr.length());
