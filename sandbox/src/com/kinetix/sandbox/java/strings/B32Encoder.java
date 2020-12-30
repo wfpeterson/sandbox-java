@@ -57,7 +57,7 @@ public class B32Encoder{
 
         //in
         int inLength = dataStr.length();
-        byte[] dataBytes = dataStr.getBytes();
+        byte[] dataBytes = new byte[inLength];
         char[] charArray = new char[inLength];
         dataStr.getChars(0, inLength, charArray, 0);
         byte cBinary = 0;
@@ -65,9 +65,6 @@ public class B32Encoder{
 
         //out
         int outLength = (int) (encodedCount * Math.ceil((inLength/ sourceCount)));
-        int temp1 = (int) (inLength % sourceCount);
-        int temp2 = (int) (inLength % encodedCount);
-
         System.out.println("calculated encoding length: "+outLength);
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
@@ -88,7 +85,8 @@ public class B32Encoder{
             dBinary = (((dataBytes[i + 0] & 0x1F) << 27)); //& 0xFFFFFFFFL);
             if (i + 1 < dataBytes.length) {
                 dBinary |= ((dataBytes[i + 1] & 0x1F) << 22);
-            } //else {
+            }
+            //else {
             //    pad++;
             //}
             if (i + 2 < dataBytes.length){
@@ -137,42 +135,61 @@ public class B32Encoder{
 
         //out
         int outLength = (int) (sourceCount *Math.ceil(inLength/ encodedCount));
-        int temp3 = (int) (inLength % sourceCount);
-        int temp4 = (int) (inLength % encodedCount);
-
         System.out.println("calculated decoding length: " + outLength);
         int num = 0;
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
+        int lastDecodedArrayItem = 0;
+        boolean noRead = false;
 
         for (int i = 0; i < encoded.length; i += ((int) encodedCount)) {
             dBinary = 0L;
-            num = 0;
+            num = 1;
             if (base64Decode[encoded[i + 0]] != -1) {
                 dBinary = ((base64Decode[encoded[i + 0]] & 0x3FL) << 34);
+                num++;
             }
-            if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
+            if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1){
                 dBinary |= ((base64Decode[encoded[i + 1]] & 0x3FL) << 28);
+                num++;
+            }
+            else{
+                noRead = true;
             }
             if (i + 2 < encoded.length && base64Decode[encoded[i + 2]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 2]] & 0x3FL) << 22);
+                num++;
+            }
+            else{
+                noRead = true;
             }
             if (i + 3 < encoded.length && base64Decode[encoded[i + 3]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 3]] & 0x3FL) << 16);
+                num++;
+            }
+            else{
+                noRead = true;
             }
             if (i + 4 < encoded.length && base64Decode[encoded[i + 4]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 4]] & 0x3FL) << 10);
-            }
-            while (num < ((int) sourceCount)) {
-                cBinary = (int) ((dBinary & 0xF800000000L) >> 35);
-                buffer.write((char) cBinary);
-                dBinary <<= 5;
                 num++;
+            }
+            else{
+                noRead = true;
+            }
+            while (num > 0) {
+                cBinary = (int) ((dBinary & 0xF800000000L) >> 35);
+                if(!(noRead == true && num < 5 && cBinary == 0)){
+                    buffer.write((char) cBinary);
+                    lastDecodedArrayItem++;
+                }
+                dBinary <<= 5;
+                num--;
             }
         }
         byte[] decodedBytes = buffer.toByteArray();
-        char[] outputChars = new char[decodedBytes.length];
-        for(int j=0; j<decodedBytes.length; j++){
+        char[] outputChars = new char[lastDecodedArrayItem];
+        for(int j=0; j<lastDecodedArrayItem; j++){
             outputChars[j] = toCAMMAndImageDiskTypeEncode[decodedBytes[j]];
         }
         decodedStr = new String(outputChars);
@@ -185,8 +202,8 @@ public class B32Encoder{
 
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
-        //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-";
-        String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
+        //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
+        String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c";
         System.out.println("Initial string: "+ testStr);
         System.out.println("Initial string length: "+testStr.length());
 

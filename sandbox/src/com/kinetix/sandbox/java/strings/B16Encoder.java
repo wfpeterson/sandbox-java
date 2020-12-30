@@ -162,6 +162,7 @@ public class B16Encoder{
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
         int lastDecodedArrayItem = 0;
+        boolean noRead = false;
 
         for (int i = 0; i < encoded.length; i += ((int) encodedCount)) {
             dBinary = 0;
@@ -174,12 +175,17 @@ public class B16Encoder{
                 dBinary |=  ((base64Decode[encoded[i + 1]] & 0x3F) << 4);
                 num++;
             }
+            else{
+                noRead = true;
+            }
             while (num > 0){
                 cBinary = (int) ((dBinary & 0xF000) >> 12);
-                buffer.write((char) cBinary);
+                if(!(noRead == true && num == 1 && cBinary == 0)){
+                    buffer.write((char) cBinary);
+                    lastDecodedArrayItem++;
+                }
                 dBinary <<= 4;
                 num--;
-                lastDecodedArrayItem++;
             }
         }
         byte[] decodedBytes = buffer.toByteArray();
@@ -196,7 +202,7 @@ public class B16Encoder{
     public static void main(String[] args){
 
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
-        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.90873218";
+        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         System.out.println("Initial string: "+ testStr);
         System.out.println("Initial string length: "+testStr.length());
