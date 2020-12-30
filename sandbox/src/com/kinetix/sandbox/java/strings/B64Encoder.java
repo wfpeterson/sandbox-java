@@ -95,6 +95,7 @@ public class B64Encoder{
 
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
+        int lastDecodedArrayItem = 0;
 
         for (int i = 0; i < encoded.length; i += ((int) encodedCount)) {
             dBinary = 0;
@@ -102,26 +103,35 @@ public class B64Encoder{
             if (base64Decode[encoded[i + 0]] != -1) {
                 dBinary = (base64Decode[encoded[i + 0]] & 0x3F) << 18;
             }
+            // skip unknown characters
+            else {
+                i++;
+                continue;
+            }
             if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 1]] & 0x3F) << 12);
+                num++;
             }
             if (i + 2 < encoded.length && base64Decode[encoded[i + 2]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 2]] & 0x3F) << 6);
+                num++;
             }
             if (i + 3 < encoded.length && base64Decode[encoded[i + 3]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 3]] & 0x3F)) ;
+                num++;
             }
-            while (num < ((int) sourceCount)) {
+            while (num > 0) {
                 cBinary = ((dBinary & 0xFF0000) >> 16);
                 buffer.write((char) cBinary);
                 dBinary <<= 8;
-                num++;
+                num--;
+                lastDecodedArrayItem++;
             }
         }
 
         byte[] decodedBytes = buffer.toByteArray();
-        char[] outputChars = new char[outLength];
-        for(int j=0; j<outLength; j++){
+        char[] outputChars = new char[lastDecodedArrayItem];
+        for(int j=0; j<lastDecodedArrayItem; j++){
             outputChars[j] = (char) decodedBytes[j];
         }
         decodedStr = new String(outputChars);
