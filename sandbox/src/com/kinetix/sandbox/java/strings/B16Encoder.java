@@ -2,7 +2,7 @@ package com.kinetix.sandbox.java.strings;
 
 public class B16Encoder{
 
-    final static public char PADDING = '=';
+    final static public char PADDING = '+';
     final static public float sourceCount = 3.0F, encodedCount = 2.0F;
 
     private static final char[] base64Encode = {
@@ -73,12 +73,15 @@ public class B16Encoder{
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
-    public static String encode(String dataStr) {
+    public static String encode(String dataStr) throws com.kinetix.sandbox.java.exceptions.URNPayloadBaseEncodingException{
 
+        if(dataStr == null){
+            throw new com.kinetix.sandbox.java.exceptions.URNPayloadBaseEncodingException("String parameter is null.");
+        }
 
         //in
         int inLength = dataStr.length();
-        byte[] dataBytes = dataStr.getBytes();
+        byte[] dataBytes = new byte[inLength];
         char[] charArray = new char[inLength];
         dataStr.getChars(0, inLength, charArray, 0);
         byte cBinary = 0;
@@ -86,15 +89,9 @@ public class B16Encoder{
 
         //out
         int outLength = (int) ((encodedCount * Math.ceil(inLength/sourceCount)));   // - (inLength % sourceCount));
-        int temp1 = (int) (inLength % sourceCount);
-        int temp2 = (int) (inLength % encodedCount);
-        int temp3 = (int) (outLength % sourceCount);
-        int temp4 = (int) (outLength % encodedCount);
-
-        System.out.println("calculated encoding length: "+outLength);
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
-
+        int empty = 0;
 
         //convert char[] to byte[] using Base8 decoding
         for (int j = 0; j < inLength; j++) {
@@ -108,41 +105,62 @@ public class B16Encoder{
         for (int i = 0; i < inLength; i += ((int) sourceCount)) {
             dBinary = 0;
             pad = 0;
+            empty = 0;
             if(i + 0 < dataBytes.length){
-                dBinary = (((dataBytes[i + 0] & 0x0F) << 12)); //& 0xFFFF);
+                dBinary = (((dataBytes[i + 0] & 0x0F) << 20) & 0xFFFFFF);
             }
-            //else{
-            //    pad++;
-            //}
             if (i + 1 < dataBytes.length) {
-                dBinary |= ((dataBytes[i + 1] & 0x0F) << 8);
+                dBinary |= ((dataBytes[i + 1] & 0x0F) << 16);
             }
-            //else {
-            //    pad++;
-            //}
+            else{
+                empty++;
+            }
             if (i + 2 < dataBytes.length){
-                dBinary |= ((dataBytes[i + 2] & 0x0F) << 4);
+                dBinary |= ((dataBytes[i + 2] & 0x0F) << 12);
             }
             else {
-                pad++;
+                empty++;
             }
-            for(int j=0; j<((int) encodedCount)-pad; j++) {
-                cBinary = 0;
-                cBinary = (byte) ((dBinary & 0xFC00) >> 10);
-                buffer.append(base64Encode[cBinary]);
-                dBinary = dBinary << 6;
+
+            if(empty == 2){
+                pad = 1;
+            }
+            else if(empty == 1){
+                pad = 0;
+            }
+
+            if(!(pad > 0)){
+                for(int j = 0; j < ((int) encodedCount); j++){
+                    cBinary = 0;
+                    cBinary = (byte) ((dBinary & 0xFC0000) >> 18);
+                    buffer.append(base64Encode[cBinary]);
+                    dBinary = dBinary << 6;
+                }
+            }
+            else{
+                for(int j = 0; j < ((int) encodedCount) - pad; j++){
+                    cBinary = 0;
+                    cBinary = (byte) ((dBinary & 0xFC0000) >> 18);
+                    buffer.append(base64Encode[cBinary]);
+                    dBinary = dBinary << 6;
+                }
             }
         }
-        //for(int k=0; k<pad; k++){
-        //    buffer.append(PADDING);
-        //}
+        for(int n=0; n<empty; n++){
+            buffer.append(PADDING);
+        }
 
         //convert char[] to string
         return buffer.toString();
     }
 
 
-    public static String decode(String dataStr) {
+    public static String decode(String dataStr) throws com.kinetix.sandbox.java.exceptions.URNPayloadBaseDecodingException{
+
+        if(dataStr == null){
+            throw new com.kinetix.sandbox.java.exceptions.URNPayloadBaseDecodingException("String parameter is null.");
+        }
+
         //in
         int inLength = dataStr.length();
         byte[] encoded = dataStr.getBytes();
@@ -151,41 +169,53 @@ public class B16Encoder{
 
         //out
         int outLength = (int) ((sourceCount * Math.ceil(inLength/encodedCount)));        // - (inLength % sourceCount));
-        //outLength -= (outLength % sourceCount);
-        int temp1 = (int) (inLength % sourceCount);
-        int temp2 = (int) (inLength % encodedCount);
-        int temp3 = (int) (outLength % sourceCount);
-        int temp4 = (int) (outLength % encodedCount);
 
-        System.out.println("calculated decoding length: " + outLength);
         int num = 0;
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
         int lastDecodedArrayItem = 0;
         boolean noRead = false;
 
-        for (int i = 0; i < encoded.length; i += ((int) encodedCount)) {
+        for (int i = 0; i < encoded.length; i += ((int) encodedCount)){
             dBinary = 0;
             num = 1;
-            if (base64Decode[encoded[i + 0]] != -1) {
+            if(base64Decode[encoded[i + 0]] != -1){
                 dBinary = ((base64Decode[encoded[i + 0]] & 0x3F) << 10);
                 num++;
             }
-            if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
-                dBinary |=  ((base64Decode[encoded[i + 1]] & 0x3F) << 4);
+            if(i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1){
+                dBinary |= ((base64Decode[encoded[i + 1]] & 0x3F) << 4);
                 num++;
             }
             else{
                 noRead = true;
             }
-            while (num > 0){
+            if(!noRead){
+                while(num > 0){
+                    cBinary = (int) ((dBinary & 0xF000) >> 12);
+                    buffer.write((byte) cBinary);
+                    lastDecodedArrayItem++;
+                    dBinary <<= 4;
+                    num--;
+                }
+            }
+            else{
+                //num--;
+                //while(num >= 0){
                 cBinary = (int) ((dBinary & 0xF000) >> 12);
-                if(!(noRead == true && num == 1 && cBinary == 0)){
-                    buffer.write((char) cBinary);
+                buffer.write((byte) cBinary);
+                lastDecodedArrayItem++;
+                dBinary <<= 4;
+                //num--;
+
+                cBinary = (int) ((dBinary & 0xF000) >> 12);
+                if(noRead && (cBinary > 0)){
+                    buffer.write((byte) cBinary);
                     lastDecodedArrayItem++;
                 }
                 dBinary <<= 4;
-                num--;
+                //num--;
+                //}
             }
         }
         byte[] decodedBytes = buffer.toByteArray();
@@ -202,17 +232,29 @@ public class B16Encoder{
     public static void main(String[] args){
 
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
-        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
+        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.908732180";
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         System.out.println("Initial string: "+ testStr);
         System.out.println("Initial string length: "+testStr.length());
 
-        String encodedResult = B16Encoder.encode(testStr);
+        String encodedResult = null;
+        try{
+            encodedResult = com.kinetix.sandbox.java.strings.B16Encoder.encode(testStr);
+        }
+        catch(com.kinetix.sandbox.java.exceptions.URNPayloadBaseEncodingException e){
+            e.printStackTrace();
+        }
         System.out.println("Encoded result: "+ encodedResult);
         System.out.println("Encoded result string length: "+encodedResult.length());
 
 
-        String decodedStr = B16Encoder.decode(encodedResult);
+        String decodedStr = null;
+        try{
+            decodedStr = com.kinetix.sandbox.java.strings.B16Encoder.decode(encodedResult);
+        }
+        catch(com.kinetix.sandbox.java.exceptions.URNPayloadBaseDecodingException e){
+            e.printStackTrace();
+        }
         System.out.println("Decoded result: " + decodedStr);
         System.out.println("Decoded result string length: " + decodedStr.length());
 

@@ -53,7 +53,11 @@ public class B32Encoder{
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
-    public static String encode(String dataStr) {
+    public static String encode(String dataStr) throws com.kinetix.sandbox.java.exceptions.URNPayloadBaseEncodingException{
+
+        if(dataStr == null){
+            throw new com.kinetix.sandbox.java.exceptions.URNPayloadBaseEncodingException("String parameter is null.");
+        }
 
         //in
         int inLength = dataStr.length();
@@ -65,7 +69,6 @@ public class B32Encoder{
 
         //out
         int outLength = (int) (encodedCount * Math.ceil((inLength/ sourceCount)));
-        System.out.println("calculated encoding length: "+outLength);
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
 
@@ -91,9 +94,10 @@ public class B32Encoder{
             //}
             if (i + 2 < dataBytes.length){
                 dBinary |= ((dataBytes[i + 2] & 0x1F) << 17);
-            } else {
-                pad++;
             }
+            //else {
+            //    pad++;
+            //}
             if (i + 3 < dataBytes.length){
                 dBinary |= ((dataBytes[i + 3] & 0x1F) << 12);
             } else {
@@ -125,7 +129,11 @@ public class B32Encoder{
     }
 
 
-    public static String decode(String dataStr) {
+    public static String decode(String dataStr) throws com.kinetix.sandbox.java.exceptions.URNPayloadBaseDecodingException{
+
+        if(dataStr == null){
+            throw new com.kinetix.sandbox.java.exceptions.URNPayloadBaseDecodingException("String parameter is null.");
+        }
 
         //in
         int inLength = dataStr.length();
@@ -135,7 +143,6 @@ public class B32Encoder{
 
         //out
         int outLength = (int) (sourceCount *Math.ceil(inLength/ encodedCount));
-        System.out.println("calculated decoding length: " + outLength);
         int num = 0;
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
         String decodedStr = null;
@@ -144,7 +151,7 @@ public class B32Encoder{
 
         for (int i = 0; i < encoded.length; i += ((int) encodedCount)) {
             dBinary = 0L;
-            num = 1;
+            num = 0;
             if (base64Decode[encoded[i + 0]] != -1) {
                 dBinary = ((base64Decode[encoded[i + 0]] & 0x3FL) << 34);
                 num++;
@@ -177,16 +184,20 @@ public class B32Encoder{
             else{
                 noRead = true;
             }
-            while (num > 0) {
+            while (num >= 0) {
                 cBinary = (int) ((dBinary & 0xF800000000L) >> 35);
-                if(!(noRead == true && num < 5 && cBinary == 0)){
-                    buffer.write((char) cBinary);
-                    lastDecodedArrayItem++;
-                }
+                buffer.write((byte) cBinary);
+                lastDecodedArrayItem++;
                 dBinary <<= 5;
                 num--;
             }
         }
+        cBinary = (int) ((dBinary & 0xF800000000L) >> 35);
+        if(noRead && (cBinary > 0)){
+            buffer.write((byte) cBinary);
+            lastDecodedArrayItem++;
+        }
+
         byte[] decodedBytes = buffer.toByteArray();
         char[] outputChars = new char[lastDecodedArrayItem];
         for(int j=0; j<lastDecodedArrayItem; j++){
@@ -202,17 +213,29 @@ public class B32Encoder{
 
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
-        //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-ae}";
         String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c";
+        //String testStr = "CM|2|{25-12-2e-9d-88-b7-01-34-1f-ee-6c-a0";
         System.out.println("Initial string: "+ testStr);
         System.out.println("Initial string length: "+testStr.length());
 
 
-        String encodedResult = B32Encoder.encode(testStr);
+        String encodedResult = null;
+        try{
+            encodedResult = com.kinetix.sandbox.java.strings.B32Encoder.encode(testStr);
+        }
+        catch(com.kinetix.sandbox.java.exceptions.URNPayloadBaseEncodingException e){
+            e.printStackTrace();
+        }
         System.out.println("Encoded result: "+ encodedResult);
         System.out.println("Encoded result string length: "+encodedResult.length());
 
-        String decodedStr = B32Encoder.decode(encodedResult);
+        String decodedStr = null;
+        try{
+            decodedStr = com.kinetix.sandbox.java.strings.B32Encoder.decode(encodedResult);
+        }
+        catch(com.kinetix.sandbox.java.exceptions.URNPayloadBaseDecodingException e){
+            e.printStackTrace();
+        }
         System.out.println("Decoded result: " + decodedStr);
         System.out.println("Decoded result string length: " + decodedStr.length());
 

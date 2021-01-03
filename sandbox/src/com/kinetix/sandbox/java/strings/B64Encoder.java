@@ -30,7 +30,11 @@ public class B64Encoder{
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
 
-    public static String encode(String dataStr) {
+    public static String encode(String dataStr) throws com.kinetix.sandbox.java.exceptions.URNPayloadBaseEncodingException{
+
+        if(dataStr == null){
+            throw new com.kinetix.sandbox.java.exceptions.URNPayloadBaseEncodingException("String parameter is null.");
+        }
 
         //in
         int inLength = dataStr.length();
@@ -40,7 +44,6 @@ public class B64Encoder{
 
         //out
         int outLength = (int) (encodedCount *Math.ceil(inLength/ sourceCount));
-        System.out.println("calculated encoding length: "+outLength);
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
 
@@ -80,7 +83,11 @@ public class B64Encoder{
     }
 
 
-    public static String decode(String dataStr) {
+    public static String decode(String dataStr) throws com.kinetix.sandbox.java.exceptions.URNPayloadBaseDecodingException{
+
+        if(dataStr == null){
+            throw new com.kinetix.sandbox.java.exceptions.URNPayloadBaseDecodingException("String parameter is null.");
+        }
 
         //in
         int inLength = dataStr.length();
@@ -90,7 +97,6 @@ public class B64Encoder{
         
         //out
         int outLength = (int) (sourceCount *Math.ceil(inLength/ encodedCount));
-        System.out.println("calculated decoding length: " + outLength);
         int num = 0;
 
         java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream(outLength);
@@ -104,10 +110,10 @@ public class B64Encoder{
                 dBinary = (base64Decode[encoded[i + 0]] & 0x3F) << 18;
             }
             // skip unknown characters
-            else {
-                i++;
-                continue;
-            }
+            //else {
+            //    i++;
+            //    continue;
+            //}
             if (i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1) {
                 dBinary |= ((base64Decode[encoded[i + 1]] & 0x3F) << 12);
                 num++;
@@ -143,15 +149,27 @@ public class B64Encoder{
     public static void main(String[] args){
 
         //String testStr = "This is a test of Base64 encoding/decoding";
-        String testStr = "This is a test of Base64 encoding/decoding";
         //String testStr = "This is a test of Base64 encoding/decodi";
+        //String testStr = "This is a test of Base64 encoding/decodi";
+        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.908732180";
 
-
-        String encodedResult = B64Encoder.encode(testStr);
+        String encodedResult = null;
+        try{
+            encodedResult = com.kinetix.sandbox.java.strings.B64Encoder.encode(testStr);
+        }
+        catch(com.kinetix.sandbox.java.exceptions.URNPayloadBaseEncodingException e){
+            e.printStackTrace();
+        }
         System.out.println("Encoded result: "+ encodedResult);
         System.out.println("Encoded result string length: "+encodedResult.length());
 
-        String decodedStr = B64Encoder.decode(encodedResult);
+        String decodedStr = null;
+        try{
+            decodedStr = com.kinetix.sandbox.java.strings.B64Encoder.decode(encodedResult);
+        }
+        catch(com.kinetix.sandbox.java.exceptions.URNPayloadBaseDecodingException e){
+            e.printStackTrace();
+        }
         System.out.println("Decoded result: " + decodedStr);
         System.out.println("Decoded result string length: " + decodedStr.length());
 
