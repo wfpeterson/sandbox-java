@@ -126,10 +126,10 @@ public class B16Encoder{
                 pad = 1;
             }
             else if(empty == 1){
-                pad = 0;
+                pad = 1;
             }
 
-            if(!(pad > 0)){
+            if(!(empty > 0)){
                 for(int j = 0; j < ((int) encodedCount); j++){
                     cBinary = 0;
                     cBinary = (byte) ((dBinary & 0xFC0000) >> 18);
@@ -138,7 +138,7 @@ public class B16Encoder{
                 }
             }
             else{
-                for(int j = 0; j < ((int) encodedCount) - pad; j++){
+                for(int j = 0; j < ((int) encodedCount)-pad; j++){
                     cBinary = 0;
                     cBinary = (byte) ((dBinary & 0xFC0000) >> 18);
                     buffer.append(base64Encode[cBinary]);
@@ -146,7 +146,7 @@ public class B16Encoder{
                 }
             }
         }
-        for(int n=0; n<empty; n++){
+        for(int n=0; n<pad; n++){
             buffer.append(PADDING);
         }
 
@@ -232,7 +232,7 @@ public class B16Encoder{
     public static void main(String[] args){
 
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
-        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.908732180";
+        String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321840";
         //String testStr = "CM|2|1.2.546.35279120364398.4059681234.536.2.5.4.1.1.23.34.9087321846";
         System.out.println("Initial string: "+ testStr);
         System.out.println("Initial string length: "+testStr.length());
