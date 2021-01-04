@@ -14,7 +14,7 @@ public class B16Encoder{
     private static final byte[] base64Decode = {
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -9, -1, -1, -1, -1,
             52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
             -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
             15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, 63,
@@ -92,6 +92,7 @@ public class B16Encoder{
         StringBuilder buffer = new StringBuilder(outLength);
         int pad = 0;
         int empty = 0;
+        int read = 0;
 
         //convert char[] to byte[] using Base8 decoding
         for (int j = 0; j < inLength; j++) {
@@ -106,6 +107,7 @@ public class B16Encoder{
             dBinary = 0;
             pad = 0;
             empty = 0;
+            read = 0;
             if(i + 0 < dataBytes.length){
                 dBinary = (((dataBytes[i + 0] & 0x0F) << 20) & 0xFFFFFF);
             }
@@ -124,9 +126,11 @@ public class B16Encoder{
 
             if(empty == 2){
                 pad = 1;
+                read = 1;
             }
             else if(empty == 1){
                 pad = 1;
+                read = 2;
             }
 
             if(!(empty > 0)){
@@ -138,7 +142,7 @@ public class B16Encoder{
                 }
             }
             else{
-                for(int j = 0; j < ((int) encodedCount)-pad; j++){
+                for(int j = 0; j < read; j++){
                     cBinary = 0;
                     cBinary = (byte) ((dBinary & 0xFC0000) >> 18);
                     buffer.append(base64Encode[cBinary]);
@@ -175,49 +179,79 @@ public class B16Encoder{
         String decodedStr = null;
         int lastDecodedArrayItem = 0;
         boolean noRead = false;
+        int empty = 0;
+        int padTotal = 0;
+        int padPeek = 0;
+        int pad = 0;
+        int parse = 0;
 
         for (int i = 0; i < encoded.length; i += ((int) encodedCount)){
             dBinary = 0;
-            num = 1;
+            num = 0;
+            padTotal = 0;
+            padPeek = 0;
+            pad = 0;
+            parse = 0;
             if(base64Decode[encoded[i + 0]] != -1){
                 dBinary = ((base64Decode[encoded[i + 0]] & 0x3F) << 10);
                 num++;
             }
             if(i + 1 < encoded.length && base64Decode[encoded[i + 1]] != -1){
-                dBinary |= ((base64Decode[encoded[i + 1]] & 0x3F) << 4);
-                num++;
+                if(base64Decode[encoded[i + 1]] == -9){
+                    pad++;
+                }
+                else{
+                    dBinary |= ((base64Decode[encoded[i + 1]] & 0x3F) << 4);
+                    num++;
+                }
             }
-            else{
-                noRead = true;
+
+            if(num == 2 && pad == 0){
+                parse = 3;
             }
-            if(!noRead){
-                while(num > 0){
+            else if(num == 2 && pad == 1){
+                parse = 2;
+            }
+            else if(num == 1 && pad == 1){
+                parse = 1;
+            }
+
+            //peek ahead for padding
+            if(i + 2 < encoded.length && base64Decode[encoded[i + 2]] == -9){
+                padPeek++;
+                i++;
+                parse--;
+            }
+
+            padTotal = pad + padPeek;
+            if(padTotal == 0){
+                while(parse > 0){
                     cBinary = (int) ((dBinary & 0xF000) >> 12);
                     buffer.write((byte) cBinary);
                     lastDecodedArrayItem++;
                     dBinary <<= 4;
-                    num--;
+                    parse--;
                 }
             }
-            else{
-                //num--;
-                //while(num >= 0){
+            else if(padTotal == 1){
+                while(parse > 0){
+                    cBinary = (int) ((dBinary & 0xF000) >> 12);
+                    buffer.write((byte) cBinary);
+                    lastDecodedArrayItem++;
+                    dBinary <<= 4;
+                    parse--;
+                }
+            }
+            else if(padTotal == 2){
                 cBinary = (int) ((dBinary & 0xF000) >> 12);
                 buffer.write((byte) cBinary);
                 lastDecodedArrayItem++;
-                dBinary <<= 4;
-                //num--;
-
-                cBinary = (int) ((dBinary & 0xF000) >> 12);
-                if(noRead && (cBinary > 0)){
-                    buffer.write((byte) cBinary);
-                    lastDecodedArrayItem++;
-                }
-                dBinary <<= 4;
-                //num--;
-                //}
             }
         }
+        //if(padPeek > 0){
+        //    lastDecodedArrayItem--;
+        //}
+
         byte[] decodedBytes = buffer.toByteArray();
         char[] outputChars = new char[lastDecodedArrayItem];
         for(int j=0; j<lastDecodedArrayItem; j++){
